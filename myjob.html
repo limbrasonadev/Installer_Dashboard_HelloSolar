@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hello Solar Installer Portal — Assigned installation jobs, site details, and field checklist.">
+    <title>Hello Solar Installer — My Jobs</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/logo_tab.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/workspace.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+</head>
+
+<body>
+    <div class="app" id="app">
+        <!-- Mobile Backdrop -->
+        <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <a class="logo" href="myjob.html">
+                <img src="assets/images/hello_solar.png" alt="Hello Solar">
+            </a>
+
+            <div class="nav-label">Installer Portal</div>
+
+            <nav class="nav" id="nav" aria-label="Installer navigation">
+                <a class="nav-link active" href="myjob.html" aria-current="page">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    My Jobs
+                </a>
+
+                <a class="nav-link" href="profile.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+
+                <a class="nav-link" href="payout.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
+                        <path d="M6 15h4" />
+                    </svg>
+                    Payout
+                </a>
+
+                <a class="nav-link" href="support.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 11a9 9 0 0 1 18 0" />
+                        <path d="M3 11v4a2 2 0 0 0 2 2h2v-6H5a2 2 0 0 0-2 2" />
+                        <path d="M21 11v4a2 2 0 0 1-2 2h-2v-6h2a2 2 0 0 1 2 2" />
+                        <path d="M17 17c0 2-2 3-5 3" />
+                    </svg>
+                    Support
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-divider"></div>
+
+                <a class="logout" id="logout" href="login.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main" id="main">
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <div class="mobile-header">
+                    <button class="mobile-menu-button" id="menu" type="button" aria-label="Open navigation"
+                        aria-expanded="false" aria-controls="sidebar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="4" y1="6" x2="20" y2="6" />
+                            <line x1="4" y1="12" x2="20" y2="12" />
+                            <line x1="4" y1="18" x2="20" y2="18" />
+                        </svg>
+                    </button>
+
+                    <a class="mobile-logo" href="myjob.html">
+                        <img src="assets/images/hello_solar.png" alt="Hello Solar">
+                    </a>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="profile" id="topbarProfileBtn" title="Manage Profile & Photo">
+                        <div class="profile-text">
+                            <span class="profile-name">SolarTech Installer</span>
+                            <span class="profile-role">PCAB Certified Contractor</span>
+                        </div>
+                        <div class="profile-avatar">SI</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content" id="content">
+                <div class="installer-workspace">
+                    <!-- Page Header with Compact Greeting -->
+                    <div class="workspace-head">
+                        <div>
+                            <span class="workspace-eyebrow">Field Operations & Assignments</span>
+                            <h1 class="workspace-title" id="installerGreeting">Good day, Engr. Alex Rivera</h1>
+                            <p class="workspace-subtitle">
+                                Review scheduled rooftop visits, track electrical commissioning milestones, and access site specifications.
+                            </p>
+                        </div>
+                        <div class="workspace-head-actions">
+                            <a href="support.html?topic=Site%20Access%20%26%20Scheduling" class="btn-action">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Contact Dispatch
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Next Scheduled Assignment Hero Card (Answers: "What is my next assignment, and what do I need to do?") -->
+                    <section class="next-assignment-card" id="nextAssignmentCard" aria-label="Next assignment preview">
+                        <!-- Populated dynamically via workspace.js -->
+                    </section>
+
+                    <!-- 3 Non-Repeating KPI Metrics -->
+                    <section class="installer-stats-grid cols-3" id="jobsStatsGrid">
+                        <div class="stat-card">
+                            <span class="stat-label">Scheduled Visits</span>
+                            <div class="stat-value" id="statScheduled">2</div>
+                            <span class="stat-sub">Site access & timing confirmed</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Active In-Progress</span>
+                            <div class="stat-value" id="statInProgress" style="color: var(--solar-orange);">2</div>
+                            <span class="stat-sub">Rooftop & inverter mounting</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Completed & Verified</span>
+                            <div class="stat-value" id="statCompleted" style="color: #059669;">2</div>
+                            <span class="stat-sub positive">✓ 100% CFEI Handover sign-off</span>
+                        </div>
+                    </section>
+
+                    <!-- Main Installation Jobs Table Panel -->
+                    <section class="panel-card">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2>Assigned Project Roster</h2>
+                                <p>Open an assignment to inspect single-line diagrams, inverter specs, and your preparation checklist.</p>
+                            </div>
+                        </div>
+
+                        <!-- Table Filter Toolbar -->
+                        <div class="table-toolbar">
+                            <div class="toolbar-search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                                <input type="search" id="jobSearchInput" placeholder="Search by job ID, customer, site, or system..." autocomplete="off">
+                            </div>
+                            <div class="toolbar-filters">
+                                <select class="toolbar-select" id="jobStatusFilter" aria-label="Filter by project status">
+                                    <option value="ALL">All Statuses</option>
+                                    <option value="Scheduled">Scheduled</option>
+                                    <option value="In progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Table Area (Responsive Cards on Mobile) -->
+                        <div class="table-responsive">
+                            <table class="data-table" id="jobsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Project & Customer</th>
+                                        <th>System & Capacity</th>
+                                        <th>Site Location</th>
+                                        <th>Current Stage</th>
+                                        <th>Schedule / Handover</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="jobsTableBody">
+                                    <!-- Rendered dynamically via workspace.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Collapsible Progressive Disclosure: Standard Operating Procedures (SOP) -->
+                    <details class="panel-accordion" id="sopAccordion">
+                        <summary>
+                            <div class="accordion-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                </svg>
+                                <span>Installer Field Guidelines & Safety SOP (Click to expand)</span>
+                            </div>
+                            <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </summary>
+                        <div class="accordion-body">
+                            <p style="margin-bottom: 12px;">
+                                Adherence to DOLE-OSH and PCAB rooftop solar safety standards is mandatory across all Hello Solar job sites.
+                            </p>
+                            <div class="sop-grid">
+                                <div class="sop-card">
+                                    <div class="sop-card-title">1. Pre-Arrival & Fall Protection</div>
+                                    <div class="sop-card-text">Inspect full-body harnesses, anchor points, and lifeline ropes before rooftop ascent. Never work during active rain or wind gusts exceeding 30 km/h.</div>
+                                </div>
+                                <div class="sop-card">
+                                    <div class="sop-card-title">2. Structural Mounting & Torque</div>
+                                    <div class="sop-card-text">Align mounting rails to roof structural purlins. Apply UV-rated weatherproofing to all penetrations. Use calibrated torque wrenches (14 Nm clamp torque).</div>
+                                </div>
+                                <div class="sop-card">
+                                    <div class="sop-card-title">3. DC Stringing & Polarity</div>
+                                    <div class="sop-card-text">Confirm string Voc and open-circuit polarity with calibrated multimeter before connecting DC isolator. Keep cables in rigid conduits away from roof moisture.</div>
+                                </div>
+                                <div class="sop-card">
+                                    <div class="sop-card-title">4. Handover & Client Briefing</div>
+                                    <div class="sop-card-text">Affix emergency disconnect placards. Connect monitoring app to client Wi-Fi. Provide 5-minute rapid shutdown orientation and secure digital sign-off.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Collapsible Progressive Disclosure: Edit Preview Data (Footer Tool) -->
+                    <details class="json-preview-accordion" id="previewDataAccordion">
+                        <summary>
+                            <span>⚙ Edit Preview Data / Local JSON Loader</span>
+                            <span style="font-size: 11px; color: var(--gray-400); font-weight: normal;">Compatible with file:/// and static hosts</span>
+                        </summary>
+                        <div class="json-preview-body">
+                            <p style="color: var(--gray-600); line-height: 1.4;">
+                                Select an edited <code>installer.json</code> file to update sample records, checklist items, and payout milestones directly without running a server.
+                            </p>
+                            <div class="json-preview-actions">
+                                <label class="btn-action" style="cursor: pointer;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    Select JSON File
+                                    <input type="file" id="jsonFileInput" accept=".json,application/json" style="display: none;">
+                                </label>
+                                <button type="button" class="btn-action" id="btnResetJsonOverride">
+                                    Restore Default Data
+                                </button>
+                            </div>
+                            <div class="json-status-alert" id="jsonStatusAlert" role="alert"></div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Bottom Navigation Bar -->
+        <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+            <a href="myjob.html" class="mobile-bottom-nav-item active" aria-current="page" aria-label="My Jobs">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span>My Jobs</span>
+            </a>
+            <a href="profile.html" class="mobile-bottom-nav-item" aria-label="Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Profile</span>
+            </a>
+            <a href="payout.html" class="mobile-bottom-nav-item" aria-label="Payout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                    <path d="M6 15h4" />
+                </svg>
+                <span>Payout</span>
+            </a>
+            <a href="support.html" class="mobile-bottom-nav-item" aria-label="Support">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 11a9 9 0 0 1 18 0" />
+                    <path d="M3 11v4a2 2 0 0 0 2 2h2v-6H5a2 2 0 0 0-2 2" />
+                    <path d="M21 11v4a2 2 0 0 1-2 2h-2v-6h2a2 2 0 0 1 2 2" />
+                    <path d="M17 17c0 2-2 3-5 3" />
+                </svg>
+                <span>Support</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Progressive Disclosure Modal: Technical Job Details -->
+    <div class="installer-modal-backdrop" id="jobModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalJobTitle">
+        <div class="installer-modal-card">
+            <div class="installer-modal-header">
+                <div>
+                    <h3 class="installer-modal-title" id="modalJobTitle">Job Details</h3>
+                    <p class="installer-modal-sub" id="modalJobSub">System & Site Specifications</p>
+                </div>
+                <button type="button" class="installer-modal-close" id="closeJobModal" aria-label="Close modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="installer-modal-body">
+                <!-- Technical Engineering Specifications -->
+                <div>
+                    <div class="modal-section-title">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        Technical Hardware & Site Specs
+                    </div>
+                    <div class="specs-grid" id="modalSpecsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Personal Site Preparation Checklist -->
+                <div>
+                    <div class="modal-section-title">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        Technician Preparation Checklist & Notes
+                    </div>
+                    <div class="checklist-items" id="modalChecklist">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <div style="margin-top: 14px;">
+                        <label for="modalSiteNotes" style="display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px;">
+                            Site Installation Notes (Saved locally)
+                        </label>
+                        <textarea id="modalSiteNotes" rows="2" style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: var(--radius-xs); font-family: inherit; font-size: 12.5px; resize: vertical;" placeholder="Add technician notes, rafter access points, or customer special requests..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="installer-modal-footer">
+                <a href="support.html" id="modalSupportBtn" class="btn-action">
+                    Contact Coordinator
+                </a>
+                <button type="button" class="btn-action btn-action-primary" id="btnSaveJobNotes">
+                    Save Notes & Checklist
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/installer_data.js"></script>
+    <script src="assets/js/workspace.js"></script>
+    <script src="assets/js/notifications.js"></script>
+</body>
+
+</html>

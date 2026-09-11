@@ -1,0 +1,341 @@
+{
+  "profile": {
+    "businessName": "SolarTech Manila Installers",
+    "fullName": "Engr. Alex Rivera",
+    "email": "installer@hellosolar.ph",
+    "phone": "+63 917 555 0199",
+    "licenseNo": "PCAB Solar Contractor Lic. #2024-8841",
+    "prcNo": "PRC Reg. Electrical Engineer #0078421",
+    "coverageArea": "Metro Manila, Cavite, Laguna, Rizal, Batangas",
+    "specialization": "Rooftop Grid-Tie Systems, Hybrid Storage, Net-Metering Commissioning",
+    "tier": "Hello Solar Tier 1 Certified",
+    "partnerRating": 4.95,
+    "completedJobs": 48,
+    "totalCapacityKwp": 288,
+    "safetyRecord": "100% Zero-Incident",
+    "payoutMethod": "BDO Unibank (Verified)"
+  },
+  "jobs": [
+    {
+      "id": "JOB-2026-081",
+      "customer": "Bautista Residence",
+      "system": "5.4 kW Hybrid",
+      "capacityKwp": 5.4,
+      "type": "Hybrid PV + Battery Storage",
+      "site": "Batasan Hills, Quezon City",
+      "region": "Metro Manila",
+      "status": "Scheduled",
+      "date": "September 18, 2026 · 8:30 AM",
+      "progress": 20,
+      "stage": "Pre-Installation & Site Access",
+      "coordinator": "Engr. Mark Villanueva (+63 917 800 1234)",
+      "technicalSpecs": {
+        "panels": "10x Trina Solar 540W Vertex S+ Dual-Glass",
+        "inverter": "1x Deye 5kW Hybrid Single-Phase (SUN-5K-SG04LP1)",
+        "battery": "1x 5.12 kWh Dyness Wall-Mounted LiFePO4",
+        "mounting": "Kliplok Standing Seam Aluminum Clamps",
+        "sldPermit": "PEE-Stamped SLD Approved by QC Engineering Office",
+        "siteAccess": "Gate pass confirmed with village guardhouse. Use secondary contractor driveway."
+      },
+      "checklist": [
+        "Appointment & homeowner access confirmation",
+        "Meralco service entrance & breaker rating check",
+        "Roof structural rafter inspection (standing seam clamps)",
+        "DC isolator switch & lightning surge protection verification",
+        "Battery ESS grounding & breaker clearance check"
+      ],
+      "siteNotes": "Homeowner requested conduit routing through rear attic to maintain clean front facade."
+    },
+    {
+      "id": "JOB-2026-082",
+      "customer": "Pasig Auto Spares HQ",
+      "system": "8.2 kW Grid-Tied",
+      "capacityKwp": 8.2,
+      "type": "Grid-Tied Commercial Rooftop",
+      "site": "Kapitolyo, Pasig City",
+      "region": "Metro Manila",
+      "status": "In progress",
+      "date": "September 19, 2026 · 8:00 AM",
+      "progress": 65,
+      "stage": "Inverter Mounting & AC Stringing",
+      "coordinator": "Ms. Clarisse Santos (+63 917 800 5678)",
+      "technicalSpecs": {
+        "panels": "15x Longi 550W Hi-MO 6 Explorer Mono",
+        "inverter": "1x Huawei SUN2000-8KTL-M1 Three-Phase",
+        "battery": "None (Grid-Tied with Net-Metering provisions)",
+        "mounting": "Trapezoidal Sheet Metal Rail Mount with EPDM Gaskets",
+        "sldPermit": "Building Permit & SLD stamped by Pasig City Engineering",
+        "siteAccess": "Building freight elevator available between 7:30 AM and 10:00 AM for panel hauling."
+      },
+      "checklist": [
+        "Fall protection harnesses & roof anchor verification",
+        "DC cable crimping & UV-resistant conduit routing",
+        "Three-phase inverter AC balance test",
+        "Digital earth resistance tester reading < 5 Ohms",
+        "Anti-islanding test preparation"
+      ],
+      "siteNotes": "Main distribution panel is located in basement level B1 near electrical riser 2."
+    },
+    {
+      "id": "JOB-2026-083",
+      "customer": "Ridgeview Villa Estates",
+      "system": "10.8 kW Hybrid",
+      "capacityKwp": 10.8,
+      "type": "Hybrid PV + High-Voltage Storage",
+      "site": "Silang Junction, Tagaytay City",
+      "region": "Cavite",
+      "status": "Scheduled",
+      "date": "September 22, 2026 · 9:00 AM",
+      "progress": 15,
+      "stage": "Material Delivery & Site Staging",
+      "coordinator": "Engr. Mark Villanueva (+63 917 800 1234)",
+      "technicalSpecs": {
+        "panels": "20x Jinko Solar 540W Tiger Neo N-Type",
+        "inverter": "1x Growatt SPH 10000TL3-BH-UP Three-Phase",
+        "battery": "2x 5.12 kWh Pylontech Force-H2 High Voltage Stack",
+        "mounting": "Asphalt Shingle Roof Tile Flashing Brackets",
+        "sldPermit": "Cavite PEE Stamped SLD & Barangay Clearance Verified",
+        "siteAccess": "Security gate requires ID surrender for all team members."
+      },
+      "checklist": [
+        "Roof structural truss spacing verification",
+        "Tile flashing weatherproofing inspection",
+        "DC array open-circuit voltage (Voc) checks per string",
+        "Battery management system (BMS) communication cable routing",
+        "Automatic Transfer Switch (ATS) isolation check"
+      ],
+      "siteNotes": "High-wind area; ensure all mid and end clamps are torqued to manufacturer spec (14 Nm)."
+    },
+    {
+      "id": "JOB-2026-084",
+      "customer": "Makati Logistics Hub",
+      "system": "15.0 kW Commercial",
+      "capacityKwp": 15.0,
+      "type": "Three-Phase Grid-Tied PV",
+      "site": "San Antonio, Makati City",
+      "region": "Metro Manila",
+      "status": "In progress",
+      "date": "September 16, 2026 · 8:00 AM",
+      "progress": 80,
+      "stage": "Testing & Net-Metering Preparation",
+      "coordinator": "Ms. Clarisse Santos (+63 917 800 5678)",
+      "technicalSpecs": {
+        "panels": "28x Canadian Solar 540W HiKu6 Monocrystalline",
+        "inverter": "1x SMA Sunny Tripower 15000TL",
+        "battery": "None (Commercial Net-Metering Export)",
+        "mounting": "Corrugated Galvanized Iron Deck Solar Rails",
+        "sldPermit": "Makati City Electrical Inspection Certificate Ready",
+        "siteAccess": "Warehouse dock 4 allocated for contractor truck parking."
+      },
+      "checklist": [
+        "String Voc and Isc verification with solar irradiance meter",
+        "Insulation resistance (megger) test on all DC cables",
+        "Inverter grid synchronization & anti-islanding trip check",
+        "Bi-directional net-metering CT installation verification",
+        "Hazard warning decals applied to all inverter and AC breaker boxes"
+      ],
+      "siteNotes": "Final Meralco joint commissioning inspection tentatively set for Friday afternoon."
+    },
+    {
+      "id": "JOB-2026-085",
+      "customer": "Sy Residence",
+      "system": "6.5 kW Grid-Tied",
+      "capacityKwp": 6.5,
+      "type": "Grid-Tied Residential PV",
+      "site": "Ayala Alabang Village, Muntinlupa",
+      "region": "Metro Manila",
+      "status": "Completed",
+      "date": "September 10, 2026",
+      "progress": 100,
+      "stage": "Commissioned & Handed Over",
+      "coordinator": "Engr. Mark Villanueva (+63 917 800 1234)",
+      "technicalSpecs": {
+        "panels": "12x JA Solar 545W DeepBlue 3.0",
+        "inverter": "1x GoodWe 6kW Single-Phase Dual-MPPT",
+        "battery": "None (Grid-tied net-metering)",
+        "mounting": "Concrete Spanish Barrel Tile Hooks with Waterproof Sealant",
+        "sldPermit": "Muntinlupa Certificate of Final Electrical Inspection (CFEI)",
+        "siteAccess": "HOA work permits complete and deposit refunded."
+      },
+      "checklist": [
+        "Complete installation report signed by client",
+        "As-built single-line electrical diagram handed over",
+        "Inverter Wi-Fi monitoring app paired with customer phone",
+        "Customer orientation on emergency rapid shutdown completed",
+        "Handover certificate uploaded to Hello Solar portal"
+      ],
+      "siteNotes": "Customer commended the neat electrical cable trunking along the exterior wall."
+    },
+    {
+      "id": "JOB-2026-086",
+      "customer": "Laguna Eco Agro-Farm",
+      "system": "12.0 kW Hybrid",
+      "capacityKwp": 12.0,
+      "type": "Off-Grid / Hybrid Agri-Solar",
+      "site": "Calamba, Laguna",
+      "region": "Laguna",
+      "status": "Completed",
+      "date": "September 4, 2026",
+      "progress": 100,
+      "stage": "Commissioned & Handed Over",
+      "coordinator": "Ms. Clarisse Santos (+63 917 800 5678)",
+      "technicalSpecs": {
+        "panels": "22x Trina Solar 545W Vertex Bifacial",
+        "inverter": "2x Deye 6kW Hybrid Inverters in Parallel",
+        "battery": "3x 5.12 kWh Felicity Solar LiFePO4 Rack Units (15.36 kWh total)",
+        "mounting": "Ground Mount Galvanized Steel Solar Framework",
+        "sldPermit": "Calamba City Electrical Permit & Agri-Industrial Clearance",
+        "siteAccess": "Farm perimeter gate key provided to caretaker."
+      },
+      "checklist": [
+        "Ground mount concrete footing curing check",
+        "Parallel inverter load balancing and communication test",
+        "Generator auto-start backup trigger check",
+        "Battery deep-discharge and recharge cycle test",
+        "Official handover certificate signed by farm manager"
+      ],
+      "siteNotes": "System is powering irrigation pumping and cold storage successfully."
+    }
+  ],
+  "payouts": [
+    {
+      "id": "PAY-2026-101",
+      "jobId": "JOB-2026-085",
+      "customer": "Sy Residence",
+      "milestone": "Final Commissioning & Handover (20%)",
+      "grossAmount": 18500,
+      "cwtPercent": 2,
+      "cwtDeduction": 370,
+      "netAmount": 18130,
+      "status": "Paid",
+      "date": "September 12, 2026",
+      "bank": "BDO Unibank · Acct ending in 8841",
+      "refCode": "BDO-FT-20260912-9921",
+      "note": "Final 20% milestone disbursed upon receipt of signed customer handover and CFEI."
+    },
+    {
+      "id": "PAY-2026-102",
+      "jobId": "JOB-2026-086",
+      "customer": "Laguna Eco Agro-Farm",
+      "milestone": "Final Commissioning & Handover (20%)",
+      "grossAmount": 26000,
+      "cwtPercent": 2,
+      "cwtDeduction": 520,
+      "netAmount": 25480,
+      "status": "Paid",
+      "date": "September 8, 2026",
+      "bank": "BDO Unibank · Acct ending in 8841",
+      "refCode": "BDO-FT-20260908-4102",
+      "note": "Final sign-off completed for 12 kW agri-solar hybrid installation."
+    },
+    {
+      "id": "PAY-2026-103",
+      "jobId": "JOB-2026-084",
+      "customer": "Makati Logistics Hub",
+      "milestone": "Inverter Mounting & DC Stringing (50%)",
+      "grossAmount": 35000,
+      "cwtPercent": 2,
+      "cwtDeduction": 700,
+      "netAmount": 34300,
+      "status": "Pending review",
+      "date": "Estimated Sept 20, 2026",
+      "bank": "BDO Unibank · Acct ending in 8841",
+      "refCode": "PENDING-REV-084",
+      "note": "Field photos submitted. Coordinator awaiting joint testing sign-off."
+    },
+    {
+      "id": "PAY-2026-104",
+      "jobId": "JOB-2026-082",
+      "customer": "Pasig Auto Spares HQ",
+      "milestone": "Rooftop Mounting Structure (30%)",
+      "grossAmount": 16500,
+      "cwtPercent": 2,
+      "cwtDeduction": 330,
+      "netAmount": 16170,
+      "status": "Pending review",
+      "date": "Estimated Sept 21, 2026",
+      "bank": "BDO Unibank · Acct ending in 8841",
+      "refCode": "PENDING-REV-082",
+      "note": "Mounting rail torque check photos undergoing engineering audit."
+    },
+    {
+      "id": "PAY-2026-105",
+      "jobId": "JOB-2026-081",
+      "customer": "Bautista Residence",
+      "milestone": "Initial Mobilization & Equipment Staging (30%)",
+      "grossAmount": 14000,
+      "cwtPercent": 2,
+      "cwtDeduction": 280,
+      "netAmount": 13720,
+      "status": "Scheduled",
+      "date": "Scheduled for Sept 25, 2026",
+      "bank": "BDO Unibank · Acct ending in 8841",
+      "refCode": "SCHED-PAY-081",
+      "note": "Triggered upon confirmed physical site access and equipment staging verification."
+    }
+  ],
+  "faqs": [
+    {
+      "category": "Site Access & Scheduling",
+      "q": "What should I do if the client is not present at the site visit time?",
+      "a": "Wait at the location and contact your assigned Hello Solar Field Coordinator immediately using the phone number in the job details modal. Do not begin work on roofs or electrical panels without homeowner or authorized site representative sign-in."
+    },
+    {
+      "category": "Site Access & Scheduling",
+      "q": "How do I request a schedule adjustment or weather postponement?",
+      "a": "Due to strict safety protocols for rooftop rain or severe wind (>30 km/h), submit a support request choosing 'Job Assignment' or call dispatch directly. Weather delays will never penalize your installer performance rating."
+    },
+    {
+      "category": "Payout & BIR 2307",
+      "q": "When are milestone labor payouts released to my bank account?",
+      "a": "Milestone payouts (30% Mounting / 50% Electrical & Inverter / 20% Handover) are audited within 24–48 hours of photo proof submission and released to your registered BDO account on the next regular disbursement cutoff (Tuesdays & Fridays)."
+    },
+    {
+      "category": "Payout & BIR 2307",
+      "q": "Why is 2% Creditable Withholding Tax (CWT) deducted?",
+      "a": "Under Philippine BIR tax regulations (RR 2-98), payments to registered contractors are subject to a 2% CWT deduction. Hello Solar issues your official BIR Form 2307 certificate quarterly, which you can claim as tax credits on your BIR Form 1701Q/1702Q filings."
+    },
+    {
+      "category": "Equipment & Permits",
+      "q": "What if delivered solar panels or inverters show transit damage?",
+      "a": "Do NOT install damaged components. Take clear timestamped photos of the serial barcode, pallet packaging, and defect, then submit them directly to your coordinator. Replacement equipment will be dispatched from our nearest hub within 24 hours."
+    },
+    {
+      "category": "Equipment & Permits",
+      "q": "Who provides the PEE-stamped Single Line Diagram (SLD) and LGU electrical permits?",
+      "a": "Hello Solar's engineering office provides approved, PEE-sealed SLDs and LGU Building/Electrical Permits before dispatch. Digital copies are linked in your job details, and physical stamped copies are in the equipment document pouch on site."
+    },
+    {
+      "category": "Safety & Quality Standards",
+      "q": "What are the mandatory PPE requirements for all rooftop installers?",
+      "a": "Full-body fall arrest harness with twin shock-absorbing lanyards connected to certified life-lines, ANSI-certified hard hat, electrical safety boots (1000V rated), and UV eye protection. Zero tolerance applies to working without tied-off harnesses."
+    },
+    {
+      "category": "Customer Handover",
+      "q": "What steps are required to complete the final handover?",
+      "a": "1) Perform insulation and anti-islanding tests, 2) pair the inverter with the customer's Wi-Fi network, 3) guide the homeowner on the rapid shutdown procedure, and 4) have them sign the digital handover form on the mobile portal."
+    }
+  ],
+  "sop": [
+    {
+      "stage": "Phase 1: Pre-Arrival & Site Readiness",
+      "rule": "Verify Village/LGU Work Permit, confirm weather forecast, and inspect all safety fall arrest harnesses and ladders before departing base."
+    },
+    {
+      "stage": "Phase 2: Rooftop Structural & Mounting",
+      "rule": "Locate structural rafters. Use torque wrenches for mid/end clamps (14 Nm spec). Seal all roof penetrations with outdoor-grade UV sealant and EPDM gaskets."
+    },
+    {
+      "stage": "Phase 3: DC Cabling & Inverter Wiring",
+      "rule": "Maintain strict DC polarity. Run dedicated solar PV cable (4mm² or 6mm²) inside corrugated metal or heavy-duty uPVC conduits. Ground all panel frames with stainless steel star washers."
+    },
+    {
+      "stage": "Phase 4: Testing & Commissioning",
+      "rule": "Measure string Voc and Isc before switching DC isolators ON. Confirm earth loop impedance < 5 Ohms. Verify AC grid sync voltage and frequency tolerances."
+    },
+    {
+      "stage": "Phase 5: Handover & Documentation",
+      "rule": "Affix high-voltage warning labels and emergency shutdown placards. Provide client orientation, complete photo package, and obtain sign-off."
+    }
+  ]
+}

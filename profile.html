@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hello Solar Installer Profile & Credentials">
+    <title>Hello Solar Installer — Profile & Credentials</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/logo_tab.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/workspace.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+</head>
+
+<body>
+    <div class="app" id="app">
+        <!-- Mobile Backdrop -->
+        <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <a class="logo" href="myjob.html">
+                <img src="assets/images/hello_solar.png" alt="Hello Solar">
+            </a>
+
+            <div class="nav-label">Installer Portal</div>
+
+            <nav class="nav" id="nav" aria-label="Installer navigation">
+                <a class="nav-link" href="myjob.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    My Jobs
+                </a>
+
+                <a class="nav-link active" href="profile.html" aria-current="page">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+
+                <a class="nav-link" href="payout.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
+                        <path d="M6 15h4" />
+                    </svg>
+                    Payout
+                </a>
+
+                <a class="nav-link" href="support.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 11a9 9 0 0 1 18 0" />
+                        <path d="M3 11v4a2 2 0 0 0 2 2h2v-6H5a2 2 0 0 0-2 2" />
+                        <path d="M21 11v4a2 2 0 0 1-2 2h-2v-6h2a2 2 0 0 1 2 2" />
+                        <path d="M17 17c0 2-2 3-5 3" />
+                    </svg>
+                    Support
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-divider"></div>
+
+                <a class="logout" id="logout" href="login.html">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main" id="main">
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <div class="mobile-header">
+                    <button class="mobile-menu-button" id="menu" type="button" aria-label="Open navigation"
+                        aria-expanded="false" aria-controls="sidebar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="4" y1="6" x2="20" y2="6" />
+                            <line x1="4" y1="12" x2="20" y2="12" />
+                            <line x1="4" y1="18" x2="20" y2="18" />
+                        </svg>
+                    </button>
+
+                    <a class="mobile-logo" href="myjob.html">
+                        <img src="assets/images/hello_solar.png" alt="Hello Solar">
+                    </a>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="profile" title="Manage Profile & Photo">
+                        <div class="profile-text">
+                            <span class="profile-name">SolarTech Installer</span>
+                            <span class="profile-role">PCAB Certified Contractor</span>
+                        </div>
+                        <div class="profile-avatar">SI</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content" id="content">
+                <div class="profile-page-container">
+
+                    <!-- Streamlined Profile Hero Section -->
+                    <section class="profile-hero">
+                        <div class="profile-hero-left">
+                            <div class="profile-hero-avatar" id="heroProfileAvatar" title="Click to upload/change photo">
+                                <span id="heroAvatarInitials">SI</span>
+                            </div>
+
+                            <div class="profile-hero-info">
+                                <h2 id="heroProfileName">SolarTech Manila Installers</h2>
+                                <div class="profile-hero-meta" id="heroProfileSub">
+                                    <span>Engr. Alex Rivera</span> · 
+                                    <span>PCAB Lic. #2024-8841</span> · 
+                                    <span class="installer-status-pill">Accreditation on File</span>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11.5px; background: rgba(255, 138, 0, 0.1); color: var(--solar-orange); font-weight: 700; padding: 3px 10px; border-radius: 4px;">
+                                        ⚡ Hello Solar Tier 1
+                                    </span>
+                                    <span style="font-size: 11.5px; background: #e0e7ff; color: #3730a3; font-weight: 700; padding: 3px 10px; border-radius: 4px;">
+                                        ★ 4.95 Partner Rating
+                                    </span>
+                                    <span style="font-size: 11.5px; background: #f3f4f6; color: #374151; font-weight: 600; padding: 3px 10px; border-radius: 4px;">
+                                        📍 Metro Manila & CALABARZON
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Photo upload controls -->
+                        <div class="profile-hero-actions">
+                            <label class="btn-upload-avatar" id="btnPageUploadAvatar" style="margin: 0;" title="Upload photo (PNG, JPG, WebP)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                Change Picture
+                                <input type="file" id="pageAvatarFileInput" accept="image/*" style="display: none;">
+                            </label>
+                            <button type="button" class="btn-remove-avatar" id="btnPageRemoveAvatar" title="Switch to dynamic initials">
+                                Use Initials
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Profile Form & Credentials Section Organized Clearly -->
+                    <section class="profile-content-grid">
+                        <!-- Main Left: Organized Form Fields -->
+                        <div class="profile-panel">
+                            <div class="profile-panel-header">
+                                <div>
+                                    <h3 class="profile-panel-title">Contractor Details & Operational Coverage</h3>
+                                    <p style="font-size: 12.5px; color: var(--gray-400); margin-top: 2px;">
+                                        Organized into Personal Details, Business Info, Coverage Areas, and Credentials.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="profile-panel-body">
+                                <form id="pageProfileForm" class="profile-form-grid">
+                                    <!-- 1. Personal & Contact Details -->
+                                    <div class="profile-form-full" style="border-bottom: 1px solid var(--gray-100); padding-bottom: 4px; margin-bottom: 4px;">
+                                        <h4 style="font-size: 13px; font-weight: 800; color: var(--solar-orange); text-transform: uppercase; letter-spacing: 0.05em;">
+                                            1. Personal & Contact Details
+                                        </h4>
+                                    </div>
+
+                                    <div class="profile-field">
+                                        <label for="pageFullName">Lead Engineer / Full Name *</label>
+                                        <input type="text" id="pageFullName" required placeholder="e.g. Engr. Alex Rivera">
+                                    </div>
+
+                                    <div class="profile-field">
+                                        <label for="pageEmail">Work Email Address *</label>
+                                        <input type="email" id="pageEmail" required placeholder="installer@hellosolar.ph">
+                                    </div>
+
+                                    <div class="profile-field">
+                                        <label for="pagePhone">Dispatch Contact Number *</label>
+                                        <input type="tel" id="pagePhone" required placeholder="+63 917 555 0199">
+                                    </div>
+
+                                    <!-- 2. Business & Team Information -->
+                                    <div class="profile-form-full" style="border-bottom: 1px solid var(--gray-100); padding-bottom: 4px; margin-top: 8px; margin-bottom: 4px;">
+                                        <h4 style="font-size: 13px; font-weight: 800; color: var(--solar-orange); text-transform: uppercase; letter-spacing: 0.05em;">
+                                            2. Business & Team Information
+                                        </h4>
+                                    </div>
+
+                                    <div class="profile-field">
+                                        <label for="pageBusinessName">Company / Contractor Name *</label>
+                                        <input type="text" id="pageBusinessName" required placeholder="e.g. SolarTech Manila Installers">
+                                    </div>
+
+                                    <div class="profile-field profile-form-full">
+                                        <label for="pageBio">Team Overview & Installation Background</label>
+                                        <textarea id="pageBio" rows="3" placeholder="Describe your crew's installation capacity, rooftop safety practices, and specialized equipment experience..."></textarea>
+                                    </div>
+
+                                    <!-- 3. Coverage Area & Specialization -->
+                                    <div class="profile-form-full" style="border-bottom: 1px solid var(--gray-100); padding-bottom: 4px; margin-top: 8px; margin-bottom: 4px;">
+                                        <h4 style="font-size: 13px; font-weight: 800; color: var(--solar-orange); text-transform: uppercase; letter-spacing: 0.05em;">
+                                            3. Coverage Area & Specializations
+                                        </h4>
+                                    </div>
+
+                                    <div class="profile-field profile-form-full">
+                                        <label for="pageCoverageArea">Primary Operating Regions</label>
+                                        <input type="text" id="pageCoverageArea" placeholder="Metro Manila, Cavite, Laguna, Rizal, Batangas">
+                                    </div>
+
+                                    <div class="profile-field profile-form-full">
+                                        <label for="pageSpecialization">Solar System Specializations</label>
+                                        <input type="text" id="pageSpecialization" placeholder="Rooftop Grid-Tie Systems, Hybrid Storage, Net-Metering Commissioning">
+                                    </div>
+
+                                    <!-- 4. Credentials & Accreditation Status -->
+                                    <div class="profile-form-full" style="border-bottom: 1px solid var(--gray-100); padding-bottom: 4px; margin-top: 8px; margin-bottom: 4px;">
+                                        <h4 style="font-size: 13px; font-weight: 800; color: var(--solar-orange); text-transform: uppercase; letter-spacing: 0.05em;">
+                                            4. Credentials & Verification Status
+                                        </h4>
+                                    </div>
+
+                                    <div class="profile-field">
+                                        <label for="pageLicenseNo">PCAB Contractor License Number</label>
+                                        <input type="text" id="pageLicenseNo" placeholder="PCAB Solar Contractor Lic. #2024-8841">
+                                    </div>
+
+                                    <div class="profile-field">
+                                        <label for="pagePrcNo">PRC Professional Engineering ID</label>
+                                        <input type="text" id="pagePrcNo" placeholder="PRC Reg. Electrical Engineer #0078421">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="profile-panel-footer">
+                                <button type="button" class="btn-modal-save" id="btnSavePageProfile">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Save Profile Changes
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Accreditation Overview -->
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div class="profile-panel">
+                                <div class="profile-panel-header">
+                                    <h3 class="profile-panel-title">Accreditation Summary</h3>
+                                </div>
+                                <div class="profile-panel-body" style="padding: 18px 22px;">
+                                    <div class="sidebar-info-card">
+                                        <div class="sidebar-info-row">
+                                            <span class="sidebar-info-label">Accreditation Status</span>
+                                            <span class="installer-status-pill">Accreditation on File</span>
+                                        </div>
+                                        <div class="sidebar-info-row">
+                                            <span class="sidebar-info-label">Contractor Tier</span>
+                                            <span class="sidebar-info-value" style="color: var(--solar-orange);">Hello Solar Tier 1</span>
+                                        </div>
+                                        <div class="sidebar-info-row">
+                                            <span class="sidebar-info-label">Verification Note</span>
+                                            <span class="sidebar-info-value" style="font-weight: 500; font-size: 12px; color: var(--gray-500);">
+                                                Sample accreditation on file pending seasonal audit.
+                                            </span>
+                                        </div>
+                                        <div class="sidebar-info-row">
+                                            <span class="sidebar-info-label">Disbursement Channel</span>
+                                            <span class="sidebar-info-value" id="sidebarPayoutMethod">BDO Unibank (On File)</span>
+                                        </div>
+                                        <div class="sidebar-info-row">
+                                            <span class="sidebar-info-label">Account Isolation</span>
+                                            <span class="sidebar-info-value" style="font-size: 11.5px; color: #059669;">
+                                                ✓ Isolated Installer Scope
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Collapsible Progressive Disclosure: Edit Preview Data (Footer Tool) -->
+                    <details class="json-preview-accordion" id="previewDataAccordion">
+                        <summary>
+                            <span>⚙ Edit Preview Data / Local JSON Loader</span>
+                            <span style="font-size: 11px; color: var(--gray-400); font-weight: normal;">Compatible with file:/// and static hosts</span>
+                        </summary>
+                        <div class="json-preview-body">
+                            <p style="color: var(--gray-600); line-height: 1.4;">
+                                Select an edited <code>installer.json</code> file to update sample records, checklist items, and payout milestones directly without running a server.
+                            </p>
+                            <div class="json-preview-actions">
+                                <label class="btn-action" style="cursor: pointer;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Select JSON File
+                                    <input type="file" id="jsonFileInput" accept=".json,application/json" style="display: none;">
+                                </label>
+                                <button type="button" class="btn-action" id="btnResetJsonOverride">
+                                    Restore Default Data
+                                </button>
+                            </div>
+                            <div class="json-status-alert" id="jsonStatusAlert" role="alert"></div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Bottom Navigation Bar -->
+        <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+            <a href="myjob.html" class="mobile-bottom-nav-item" aria-label="My Jobs">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span>My Jobs</span>
+            </a>
+            <a href="profile.html" class="mobile-bottom-nav-item active" aria-current="page" aria-label="Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Profile</span>
+            </a>
+            <a href="payout.html" class="mobile-bottom-nav-item" aria-label="Payout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                    <path d="M6 15h4" />
+                </svg>
+                <span>Payout</span>
+            </a>
+            <a href="support.html" class="mobile-bottom-nav-item" aria-label="Support">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 11a9 9 0 0 1 18 0" />
+                    <path d="M3 11v4a2 2 0 0 0 2 2h2v-6H5a2 2 0 0 0-2 2" />
+                    <path d="M21 11v4a2 2 0 0 1-2 2h-2v-6h2a2 2 0 0 1 2 2" />
+                    <path d="M17 17c0 2-2 3-5 3" />
+                </svg>
+                <span>Support</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/installer_data.js"></script>
+    <script src="assets/js/workspace.js"></script>
+    <script src="assets/js/notifications.js"></script>
+</body>
+
+</html>
