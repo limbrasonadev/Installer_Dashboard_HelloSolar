@@ -57,15 +57,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --------------------------------------------------------------------------
-    // 2. LOGOUT HANDLER
+    // 1B. STICKY TOPBAR SCROLL STATE
     // --------------------------------------------------------------------------
-    const logoutBtn = document.getElementById("logout");
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
+    const topbarEl = document.querySelector(".topbar");
+    if (topbarEl) {
+        const handleTopbarScroll = () => {
+            if (window.scrollY > 4) {
+                topbarEl.classList.add("scrolled");
+            } else {
+                topbarEl.classList.remove("scrolled");
+            }
+        };
+        window.addEventListener("scroll", handleTopbarScroll, { passive: true });
+        handleTopbarScroll();
+    }
+
+    // --------------------------------------------------------------------------
+    // 2. LOGOUT HANDLER (STATIC & DYNAMIC DELEGATION)
+    // --------------------------------------------------------------------------
+    document.addEventListener("click", (e) => {
+        const logoutTrigger = e.target.closest(".logout, #logout, [data-action='logout']");
+        if (logoutTrigger) {
+            localStorage.removeItem("hello_solar_installer_logged_in");
+            localStorage.removeItem("hello_solar_installer_user");
+        }
+    });
+
+    document.querySelectorAll(".logout, #logout").forEach(btn => {
+        btn.addEventListener("click", () => {
             localStorage.removeItem("hello_solar_installer_logged_in");
             localStorage.removeItem("hello_solar_installer_user");
         });
-    }
+    });
 
     // --------------------------------------------------------------------------
     // 3. PROFILE DATA & AVATAR HELPERS
@@ -73,8 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const DEFAULT_INSTALLER_PROFILE = {
         username: "installer@hellosolar.ph",
         email: "installer@hellosolar.ph",
-        businessName: "SolarTech Manila Installers",
-        fullName: "Engr. Alex Rivera",
+        businessName: "SolarTech Installer",
+        fullName: "Alex Rivera",
         phone: "+63 917 555 0199",
         licenseNo: "PCAB Solar Contractor Lic. #2024-8841",
         prcNo: "PRC Reg. Electrical Engineer #0078421",
@@ -93,6 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const raw = localStorage.getItem("hello_solar_installer_user");
             if (raw) {
                 const parsed = JSON.parse(raw);
+                if (parsed.fullName === "Engr. Alex Rivera") parsed.fullName = "Alex Rivera";
+                if (parsed.businessName === "SolarTech Manila Installers") parsed.businessName = "SolarTech Installer";
                 return Object.assign({}, DEFAULT_INSTALLER_PROFILE, parsed);
             }
         } catch (e) {
@@ -198,8 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function syncAllProfileDisplays() {
         const profile = getStoredProfile();
-        const displayName = profile.businessName || profile.fullName || "SolarTech Installer";
-        const initials = computeInitials(displayName);
+        const fullName = profile.fullName || "Alex Rivera";
+        const teamName = profile.businessName || "SolarTech Installer";
+        const displayName = teamName;
+        const initials = computeInitials(fullName);
 
         // 1. Topbar elements - IMMEDIATELY updates every topbar avatar with chosen picture!
         document.querySelectorAll(".profile-name").forEach(el => {
@@ -210,27 +237,92 @@ document.addEventListener("DOMContentLoaded", () => {
             renderAvatar(el, profile);
         });
 
-        // 2. Profile page hero elements
+        // 2. Simplified Profile Page Elements
+        const displayProfileName = document.getElementById("displayProfileName");
+        if (displayProfileName) displayProfileName.textContent = fullName;
+
+        const displayProfileSub = document.getElementById("displayProfileSub");
+        if (displayProfileSub) displayProfileSub.textContent = `Installer · ${teamName}`;
+
+        const displayEmail = document.getElementById("displayEmail");
+        if (displayEmail) displayEmail.textContent = profile.email || "installer@hellosolar.ph";
+
+        const displayPhone = document.getElementById("displayPhone");
+        if (displayPhone) displayPhone.textContent = profile.phone || "+63 917 555 0199";
+
+        const displayTeam = document.getElementById("displayTeam");
+        if (displayTeam) displayTeam.textContent = teamName;
+
+        const displayCoverageArea = document.getElementById("displayCoverageArea");
+        if (displayCoverageArea) displayCoverageArea.textContent = profile.coverageArea || "Metro Manila, Cavite, Laguna, Rizal";
+
+        const displaySpecialization = document.getElementById("displaySpecialization");
+        if (displaySpecialization) displaySpecialization.textContent = profile.specialization || "Rooftop Grid-Tie & Hybrid Solar";
+
+        const displayPayoutMethod = document.getElementById("displayPayoutMethod");
+        if (displayPayoutMethod) displayPayoutMethod.textContent = profile.payoutMethod || "BDO Unibank · Acct ending in 8841 (On File)";
+
+        const displayLicenseNo = document.getElementById("displayLicenseNo");
+        if (displayLicenseNo) displayLicenseNo.textContent = `#${(profile.licenseNo || "2024-8841").replace(/^[^\d]*/, "") || "2024-8841"}`;
+
+        const displayPrcNo = document.getElementById("displayPrcNo");
+        if (displayPrcNo) displayPrcNo.textContent = `#${(profile.prcNo || "0078421").replace(/^[^\d]*/, "") || "0078421"}`;
+
+        // 1C. Header Quick Profile Modal Synchronization
+        const headerModalAvatar = document.getElementById("headerModalAvatar");
+        if (headerModalAvatar) renderAvatar(headerModalAvatar, profile);
+        const headerModalName = document.getElementById("headerModalName");
+        if (headerModalName) headerModalName.textContent = fullName;
+        const headerModalTeam = document.getElementById("headerModalTeam");
+        if (headerModalTeam) headerModalTeam.textContent = teamName;
+        const headerModalEmail = document.getElementById("headerModalEmail");
+        if (headerModalEmail) headerModalEmail.textContent = profile.email || "installer@hellosolar.ph";
+        const headerModalPhone = document.getElementById("headerModalPhone");
+        if (headerModalPhone) headerModalPhone.textContent = profile.phone || "+63 917 555 0199";
+
+        // Backward compatibility for hero elements
         const heroNameEl = document.getElementById("heroProfileName");
-        if (heroNameEl) heroNameEl.textContent = displayName;
+        if (heroNameEl) heroNameEl.textContent = fullName;
 
         const heroSubEl = document.getElementById("heroProfileSub");
         if (heroSubEl) {
             heroSubEl.innerHTML = `
-                <span>${profile.fullName || "Lead Contractor"}</span> · 
-                <span>${profile.licenseNo || "Certified Solar Partner"}</span> · 
-                <span class="installer-status-pill">Accreditation on File</span>
+                <span>${fullName}</span> · 
+                <span class="installer-status-pill status-pill-green">Verified Partner</span>
             `;
         }
 
         const heroAvatarEl = document.getElementById("heroProfileAvatar");
-        if (heroAvatarEl) renderAvatar(heroAvatarEl, profile);
+        if (heroAvatarEl) {
+            const photoBtn = heroAvatarEl.querySelector(".avatar-photo-btn");
+            if (profile.avatarUrl && profile.avatarUrl.trim() !== "") {
+                heroAvatarEl.innerHTML = `<img class="profile-avatar-img" src="${profile.avatarUrl}" alt="${fullName}">`;
+            } else {
+                heroAvatarEl.innerHTML = `<span id="heroAvatarInitials">${initials}</span>`;
+            }
+            if (photoBtn) {
+                heroAvatarEl.appendChild(photoBtn);
+            }
+        }
 
-        // 3. Modal preview
+        // 3. Modal live preview & avatar
         const avatarWrap = document.getElementById("modalAvatarWrap");
         if (avatarWrap) {
-            renderAvatar(avatarWrap, profile);
+            if (profile.avatarUrl && profile.avatarUrl.trim() !== "") {
+                avatarWrap.innerHTML = `<img class="profile-avatar-img" src="${profile.avatarUrl}" alt="${fullName}">`;
+            } else {
+                avatarWrap.innerHTML = `<span id="modalAvatarInitials">${initials}</span>`;
+            }
         }
+
+        const previewLiveName = document.getElementById("previewLiveName");
+        if (previewLiveName) previewLiveName.textContent = fullName;
+
+        const previewLiveSub = document.getElementById("previewLiveSub");
+        if (previewLiveSub) previewLiveSub.textContent = `Installer · ${teamName}`;
+
+        const previewLiveArea = document.getElementById("previewLiveArea");
+        if (previewLiveArea) previewLiveArea.textContent = (profile.coverageArea || "Metro Manila").split(',')[0].trim();
 
         // 4. Update Initials buttons
         document.querySelectorAll(".avatar-preset-btn.initials-btn").forEach(el => {
@@ -277,315 +369,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 input.value = item.val || "";
             }
         });
+
+        // 8. Digital Installer Gate Pass / ID Badge elements
+        const badgeContractorName = document.getElementById("badgeContractorName");
+        if (badgeContractorName) badgeContractorName.textContent = fullName;
+
+        const badgeContractorCompany = document.getElementById("badgeContractorCompany");
+        if (badgeContractorCompany) badgeContractorCompany.textContent = teamName;
+
+        const badgeLicenseVal = document.getElementById("badgeLicenseVal");
+        if (badgeLicenseVal) badgeLicenseVal.textContent = profile.licenseNo || "#2024-8841";
+
+        const badgePrcVal = document.getElementById("badgePrcVal");
+        if (badgePrcVal) badgePrcVal.textContent = profile.prcNo || "#0078421";
+
+        const badgeAvatarWrap = document.getElementById("badgeAvatarWrap");
+        if (badgeAvatarWrap) {
+            if (profile.avatarUrl && profile.avatarUrl.trim() !== "") {
+                badgeAvatarWrap.innerHTML = `<img src="${profile.avatarUrl}" alt="${fullName}">`;
+            } else {
+                badgeAvatarWrap.innerHTML = `<span id="badgeAvatarInitials">${initials}</span>`;
+            }
+        }
     }
 
     // Initial render
     syncAllProfileDisplays();
 
     // --------------------------------------------------------------------------
-    // 5. INTERACTIVE PROFILE MODAL & PICTURE UPLOAD
+    // 5. PROFILE HELPERS & DEDICATED PROFILE PAGE
     // --------------------------------------------------------------------------
-    let modalBackdrop = document.getElementById("profileModal");
-
-    if (!modalBackdrop) {
-        modalBackdrop = document.createElement("div");
-        modalBackdrop.id = "profileModal";
-        modalBackdrop.className = "profile-modal-backdrop";
-        modalBackdrop.setAttribute("role", "dialog");
-        modalBackdrop.setAttribute("aria-modal", "true");
-        modalBackdrop.setAttribute("aria-labelledby", "profileModalTitle");
-
-        modalBackdrop.innerHTML = `
-            <div class="profile-modal-card">
-                <!-- Modal Header -->
-                <div class="profile-modal-header">
-                    <div class="profile-modal-header-info">
-                        <div class="profile-modal-badge">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="profile-modal-title" id="profileModalTitle">Installer Profile</h3>
-                            <p class="profile-modal-subtitle">Manage company details, choose avatar picture, and contractor credentials.</p>
-                        </div>
-                    </div>
-                    <button type="button" class="profile-modal-close" id="closeProfileModal" aria-label="Close modal">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Modal Body -->
-                <div class="profile-modal-body">
-                    <!-- Avatar Photo & Upload Section -->
-                    <div class="profile-avatar-section">
-                        <div class="profile-modal-avatar-wrap" id="modalAvatarWrap" title="Click to upload profile photo">
-                            <span id="modalAvatarInitials">SI</span>
-                            <div class="profile-avatar-overlay">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                                    <circle cx="12" cy="13" r="4"></circle>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="profile-avatar-controls">
-                            <div class="profile-avatar-title">Profile Picture & Avatar</div>
-                            <div class="profile-avatar-desc">Choose an avatar picture (or upload any photo size). Chosen picture shows in the topbar immediately.</div>
-                            
-                            <div class="profile-avatar-actions">
-                                <label class="btn-upload-avatar" title="Upload any size image file">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                    Upload Picture (Any Size)
-                                    <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
-                                </label>
-                                <button type="button" class="btn-remove-avatar" id="btnRemoveAvatar">Use Initials</button>
-                            </div>
-
-                            <!-- Quick Preset Photo Picker Gallery -->
-                            <div class="avatar-presets-wrap">
-                                <div class="avatar-presets-label">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                    Choose Photo or Initials:
-                                </div>
-                                <div class="avatar-presets-grid" id="modalPresetsGrid">
-                                    <button type="button" class="avatar-preset-btn" data-preset="officer" title="Finance & Solar Officer">
-                                        <img src="${PRESET_PICTURES.officer}" alt="Officer">
-                                    </button>
-                                    <button type="button" class="avatar-preset-btn" data-preset="engineer" title="Solar Field Engineer">
-                                        <img src="${PRESET_PICTURES.engineer}" alt="Engineer">
-                                    </button>
-                                    <button type="button" class="avatar-preset-btn" data-preset="pro" title="Master Electrician">
-                                        <img src="${PRESET_PICTURES.pro}" alt="Specialist">
-                                    </button>
-                                    <button type="button" class="avatar-preset-btn" data-preset="solar" title="Solar PV Array">
-                                        <img src="${PRESET_PICTURES.solar}" alt="Solar Array">
-                                    </button>
-                                    <button type="button" class="avatar-preset-btn" data-preset="storage" title="Battery Storage">
-                                        <img src="${PRESET_PICTURES.storage}" alt="Storage">
-                                    </button>
-                                    <button type="button" class="avatar-preset-btn initials-btn" data-preset="initials" title="Use Name Initials">
-                                        SI
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project Performance Badges -->
-                    <div class="installer-project-info">
-                        <div class="installer-info-item">
-                            <span class="installer-info-label">Network Status</span>
-                            <span class="installer-status-pill">● Certified Active</span>
-                        </div>
-                        <div class="installer-info-item">
-                            <span class="installer-info-label">Accreditation</span>
-                            <span class="installer-info-val">Hello Solar Tier 1</span>
-                        </div>
-                        <div class="installer-info-item">
-                            <span class="installer-info-label">Installed Capacity</span>
-                            <span class="installer-info-val" id="modalCapacityStat">288 kWp Rooftop Solar</span>
-                        </div>
-                        <div class="installer-info-item">
-                            <span class="installer-info-label">Completed Jobs</span>
-                            <span class="installer-info-val" id="modalJobsStat">48 Projects Verified</span>
-                        </div>
-                    </div>
-
-                    <!-- Editable Form Fields -->
-                    <form id="modalProfileForm" class="profile-form-grid">
-                        <div class="profile-field">
-                            <label for="modalBusinessName">Company / Business Name</label>
-                            <input type="text" id="modalBusinessName" required>
-                        </div>
-
-                        <div class="profile-field">
-                            <label for="modalFullName">Lead Contractor / Full Name</label>
-                            <input type="text" id="modalFullName" required>
-                        </div>
-
-                        <div class="profile-field">
-                            <label for="modalEmail">Work Email Address</label>
-                            <input type="email" id="modalEmail" required>
-                        </div>
-
-                        <div class="profile-field">
-                            <label for="modalPhone">Mobile / Dispatch Contact</label>
-                            <input type="tel" id="modalPhone" required>
-                        </div>
-
-                        <div class="profile-field">
-                            <label for="modalLicenseNo">PCAB / Electrical License #</label>
-                            <input type="text" id="modalLicenseNo">
-                        </div>
-
-                        <div class="profile-field">
-                            <label for="modalCoverageArea">Operating Coverage Regions</label>
-                            <input type="text" id="modalCoverageArea">
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Modal Footer -->
-                <div class="profile-modal-footer">
-                    <button type="button" class="btn-modal-cancel" id="cancelProfileModal">Cancel</button>
-                    <button type="button" class="btn-modal-save" id="saveProfileModal">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Save Changes
-                    </button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modalBackdrop);
-    }
-
-    // Modal elements
-    const closeBtn = document.getElementById("closeProfileModal");
-    const cancelBtn = document.getElementById("cancelProfileModal");
-    const saveBtn = document.getElementById("saveProfileModal");
-    const avatarInput = document.getElementById("avatarFileInput");
-    const avatarWrap = document.getElementById("modalAvatarWrap");
-    const removeAvatarBtn = document.getElementById("btnRemoveAvatar");
-
-    const modalBusinessName = document.getElementById("modalBusinessName");
-    const modalFullName = document.getElementById("modalFullName");
-    const modalEmail = document.getElementById("modalEmail");
-    const modalPhone = document.getElementById("modalPhone");
-    const modalLicenseNo = document.getElementById("modalLicenseNo");
-    const modalCoverageArea = document.getElementById("modalCoverageArea");
-
     let currentAvatarDataUrl = "";
-
-    function openProfileModal() {
-        const profile = getStoredProfile();
-        currentAvatarDataUrl = profile.avatarUrl || "";
-
-        if (modalBusinessName) modalBusinessName.value = profile.businessName || "";
-        if (modalFullName) modalFullName.value = profile.fullName || "";
-        if (modalEmail) modalEmail.value = profile.email || "";
-        if (modalPhone) modalPhone.value = profile.phone || "";
-        if (modalLicenseNo) modalLicenseNo.value = profile.licenseNo || "";
-        if (modalCoverageArea) modalCoverageArea.value = profile.coverageArea || "";
-
-        syncAllProfileDisplays();
-        modalBackdrop.classList.add("open");
-    }
-
-    function closeProfileModal() {
-        modalBackdrop.classList.remove("open");
-    }
-
-    function updateModalAvatarPreview() {
-        const tempObj = {
-            businessName: modalBusinessName ? modalBusinessName.value : "",
-            fullName: modalFullName ? modalFullName.value : "",
-            avatarUrl: currentAvatarDataUrl
-        };
-        renderAvatar(avatarWrap, tempObj);
-    }
-
-    // Trigger opening modal when clicking topbar .profile or links
-    document.querySelectorAll(".profile").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            e.preventDefault();
-            openProfileModal();
-        });
-    });
-
-    if (closeBtn) closeBtn.addEventListener("click", closeProfileModal);
-    if (cancelBtn) cancelBtn.addEventListener("click", closeProfileModal);
-
-    modalBackdrop.addEventListener("click", (e) => {
-        if (e.target === modalBackdrop) closeProfileModal();
-    });
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modalBackdrop.classList.contains("open")) {
-            closeProfileModal();
-        }
-    });
-
-    // Real-time initials update as user types in modal
-    if (modalBusinessName) modalBusinessName.addEventListener("input", updateModalAvatarPreview);
-    if (modalFullName) modalFullName.addEventListener("input", updateModalAvatarPreview);
-
-    // Any-size Avatar upload from user file in modal - IMMEDIATELY updates topbar circle!
-    if (avatarInput) {
-        avatarInput.addEventListener("change", (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file) return;
-
-            processImageFile(file, (optimizedDataUrl) => {
-                currentAvatarDataUrl = optimizedDataUrl;
-                const profile = getStoredProfile();
-                profile.avatarUrl = optimizedDataUrl;
-                saveStoredProfile(profile);
-                syncAllProfileDisplays();
-                showProfileToast("Profile picture updated! Showing in topbar ✓");
-                window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
-            }, (errMsg) => {
-                showProfileToast(errMsg);
-            });
-        });
-    }
-
-    if (avatarWrap && avatarInput) {
-        avatarWrap.addEventListener("click", () => {
-            avatarInput.click();
-        });
-    }
-
-    // Revert to initials in modal - IMMEDIATELY updates topbar circle!
-    if (removeAvatarBtn) {
-        removeAvatarBtn.addEventListener("click", () => {
-            currentAvatarDataUrl = "";
-            const profile = getStoredProfile();
-            profile.avatarUrl = "";
-            saveStoredProfile(profile);
-            if (avatarInput) avatarInput.value = "";
-            syncAllProfileDisplays();
-            showProfileToast("Reverted to your dynamic name initials! ✓");
-            window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
-        });
-    }
-
-    // Save Profile Changes from Modal
-    if (saveBtn) {
-        saveBtn.addEventListener("click", () => {
-            const profile = getStoredProfile();
-
-            profile.businessName = modalBusinessName ? modalBusinessName.value.trim() : profile.businessName;
-            profile.fullName = modalFullName ? modalFullName.value.trim() : profile.fullName;
-            profile.email = modalEmail ? modalEmail.value.trim() : profile.email;
-            profile.phone = modalPhone ? modalPhone.value.trim() : profile.phone;
-            profile.licenseNo = modalLicenseNo ? modalLicenseNo.value.trim() : profile.licenseNo;
-            profile.coverageArea = modalCoverageArea ? modalCoverageArea.value.trim() : profile.coverageArea;
-            if (currentAvatarDataUrl !== undefined) {
-                profile.avatarUrl = currentAvatarDataUrl;
-            }
-
-            saveStoredProfile(profile);
-            syncAllProfileDisplays();
-            closeProfileModal();
-            showProfileToast("Installer profile & picture saved successfully! ✓");
-
-            window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
-        });
-    }
-
-    // --------------------------------------------------------------------------
-    // 6. DEDICATED PROFILE PAGE (profile.html) DYNAMIC INITIALS & PICTURE PICKER
-    // --------------------------------------------------------------------------
     const pageBusinessName = document.getElementById("pageBusinessName");
     const pageFullName = document.getElementById("pageFullName");
     const pageEmail = document.getElementById("pageEmail");
@@ -628,35 +442,147 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pageBusinessName) pageBusinessName.addEventListener("input", handlePageNameInput);
     if (pageFullName) pageFullName.addEventListener("input", handlePageNameInput);
 
-    // Click hero avatar directly to trigger file picker
-    if (heroAvatarEl && pageAvatarInput) {
-        heroAvatarEl.addEventListener("click", () => {
-            pageAvatarInput.click();
+    // Modal Elements & Handlers: Edit Profile Studio
+    const editProfileModal = document.getElementById("editProfileModal");
+    const btnOpenEditProfile = document.getElementById("btnOpenEditProfile");
+    const btnCloseEditProfile = document.getElementById("btnCloseEditProfile");
+    const btnCancelEditProfile = document.getElementById("btnCancelEditProfile");
+    const modalAvatarInput = document.getElementById("modalAvatarFileInput");
+
+    function openEditProfileModal() {
+        if (!editProfileModal) return;
+        syncAllProfileDisplays();
+        editProfileModal.style.display = "flex";
+        editProfileModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeEditProfileModal() {
+        if (!editProfileModal) return;
+        editProfileModal.classList.remove("open");
+        editProfileModal.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    if (btnOpenEditProfile) btnOpenEditProfile.addEventListener("click", openEditProfileModal);
+    if (btnCloseEditProfile) btnCloseEditProfile.addEventListener("click", closeEditProfileModal);
+    if (btnCancelEditProfile) btnCancelEditProfile.addEventListener("click", closeEditProfileModal);
+
+    if (editProfileModal) {
+        editProfileModal.addEventListener("click", (e) => {
+            if (e.target === editProfileModal) closeEditProfileModal();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && editProfileModal.style.display === "flex") {
+                closeEditProfileModal();
+            }
         });
     }
 
-    // Any-size image file upload on dedicated profile page - IMMEDIATELY updates topbar!
+    // Modal Elements & Handlers: Digital Installer Gate Pass / ID Card
+    const digitalIdModal = document.getElementById("digitalIdModal");
+    const btnOpenDigitalId = document.getElementById("btnOpenDigitalId");
+    const btnOpenDigitalIdFromCard = document.getElementById("btnOpenDigitalIdFromCard");
+    const btnCloseDigitalIdHeader = document.getElementById("btnCloseDigitalIdHeader");
+    const btnCloseDigitalId = document.getElementById("btnCloseDigitalId");
+    const btnCopyVerifyLink = document.getElementById("btnCopyVerifyLink");
+    const btnPrintIdPass = document.getElementById("btnPrintIdPass");
+
+    function openDigitalIdModal() {
+        if (!digitalIdModal) return;
+        syncAllProfileDisplays();
+        digitalIdModal.style.display = "flex";
+        digitalIdModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeDigitalIdModal() {
+        if (!digitalIdModal) return;
+        digitalIdModal.classList.remove("open");
+        digitalIdModal.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    if (btnOpenDigitalId) btnOpenDigitalId.addEventListener("click", openDigitalIdModal);
+    if (btnOpenDigitalIdFromCard) btnOpenDigitalIdFromCard.addEventListener("click", openDigitalIdModal);
+    if (btnCloseDigitalIdHeader) btnCloseDigitalIdHeader.addEventListener("click", closeDigitalIdModal);
+    if (btnCloseDigitalId) btnCloseDigitalId.addEventListener("click", closeDigitalIdModal);
+
+    if (digitalIdModal) {
+        digitalIdModal.addEventListener("click", (e) => {
+            if (e.target === digitalIdModal) closeDigitalIdModal();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && digitalIdModal.style.display === "flex") {
+                closeDigitalIdModal();
+            }
+        });
+    }
+
+    if (btnCopyVerifyLink) {
+        btnCopyVerifyLink.addEventListener("click", async () => {
+            const verifyUrl = "https://portal.hellosolar.ph/verify/HS-INST-2026-08841";
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(verifyUrl);
+                } else {
+                    const tempInput = document.createElement("input");
+                    tempInput.value = verifyUrl;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                }
+                const originalHtml = btnCopyVerifyLink.innerHTML;
+                btnCopyVerifyLink.innerHTML = `<span>Copied Link! ✓</span>`;
+                showProfileToast("Verification link copied to clipboard! ✓");
+                setTimeout(() => {
+                    btnCopyVerifyLink.innerHTML = originalHtml;
+                }, 2000);
+            } catch (err) {
+                console.warn("Clipboard copy failed:", err);
+                showProfileToast("Verification ID: HS-INST-2026-08841");
+            }
+        });
+    }
+
+    if (btnPrintIdPass) {
+        btnPrintIdPass.addEventListener("click", () => {
+            window.print();
+        });
+    }
+
+    // Avatar File Upload Handler
+    function handleAvatarFileUpload(file) {
+        if (!file) return;
+        processImageFile(file, (optimizedDataUrl) => {
+            const profile = getStoredProfile();
+            profile.avatarUrl = optimizedDataUrl;
+            saveStoredProfile(profile);
+            currentAvatarDataUrl = optimizedDataUrl;
+            syncAllProfileDisplays();
+            showProfileToast("Profile picture updated! ✓");
+            window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
+        }, (errMsg) => {
+            showProfileToast(errMsg);
+        });
+    }
+
     if (pageAvatarInput) {
         pageAvatarInput.addEventListener("change", (e) => {
             const file = e.target.files && e.target.files[0];
-            if (!file) return;
-
-            processImageFile(file, (optimizedDataUrl) => {
-                const profile = getStoredProfile();
-                profile.avatarUrl = optimizedDataUrl;
-                saveStoredProfile(profile);
-                currentAvatarDataUrl = optimizedDataUrl;
-                syncAllProfileDisplays();
-                showProfileToast("Profile picture updated! Displayed in topbar ✓");
-
-                window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
-            }, (errMsg) => {
-                showProfileToast(errMsg);
-            });
+            handleAvatarFileUpload(file);
         });
     }
 
-    // Preset Pictures: Clicking ANY preset button immediately changes the topbar avatar to that picture!
+    if (modalAvatarInput) {
+        modalAvatarInput.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            handleAvatarFileUpload(file);
+        });
+    }
+
+    // Preset Pictures: Clicking ANY preset button immediately changes avatar!
     document.addEventListener("click", (e) => {
         const presetBtn = e.target.closest(".avatar-preset-btn");
         if (!presetBtn) return;
@@ -671,7 +597,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentAvatarDataUrl = "";
             saveStoredProfile(profile);
             syncAllProfileDisplays();
-            showProfileToast("Switched to your dynamic name initials in topbar! ✓");
+            showProfileToast("Switched to dynamic name initials! ✓");
             window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
             return;
         }
@@ -684,12 +610,12 @@ document.addEventListener("DOMContentLoaded", () => {
             profile.avatarUrl = dataUrl;
             saveStoredProfile(profile);
             syncAllProfileDisplays();
-            showProfileToast("Chosen picture now displayed in topbar! ✓");
+            showProfileToast("Chosen picture displayed! ✓");
             window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
         }
     });
 
-    // Revert to initials button on profile page
+    // Revert to initials button on profile page / modal
     if (btnPageRemoveAvatar) {
         btnPageRemoveAvatar.addEventListener("click", () => {
             const profile = getStoredProfile();
@@ -697,18 +623,25 @@ document.addEventListener("DOMContentLoaded", () => {
             saveStoredProfile(profile);
             currentAvatarDataUrl = "";
             if (pageAvatarInput) pageAvatarInput.value = "";
+            if (modalAvatarInput) modalAvatarInput.value = "";
 
             syncAllProfileDisplays();
-            showProfileToast("Picture removed. Now showing dynamic initials in topbar! ✓");
-
+            showProfileToast("Picture removed. Showing dynamic initials! ✓");
             window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
         });
     }
 
-    // Save Profile Changes from dedicated profile page
+    // Save Profile Changes from edit profile modal
     if (btnSavePageProfile) {
         btnSavePageProfile.addEventListener("click", (e) => {
             e.preventDefault();
+
+            const form = document.getElementById("pageProfileForm");
+            if (form && !form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             const profile = getStoredProfile();
 
             if (pageBusinessName && pageBusinessName.value.trim()) {
@@ -731,9 +664,104 @@ document.addEventListener("DOMContentLoaded", () => {
 
             saveStoredProfile(profile);
             syncAllProfileDisplays();
-            showProfileToast("Installer profile & credentials saved successfully! ✓");
+            closeEditProfileModal();
+            showProfileToast("Profile changes saved successfully! ✓");
 
             window.dispatchEvent(new CustomEvent("helloSolarProfileUpdated", { detail: profile }));
+        });
+    }
+
+    // Modal Tabs Switching (Personal, Team, Licenses)
+    document.querySelectorAll(".modal-tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetTab = btn.getAttribute("data-tab");
+            document.querySelectorAll(".modal-tab-btn").forEach(b => {
+                b.classList.remove("active");
+                b.setAttribute("aria-selected", "false");
+            });
+            btn.classList.add("active");
+            btn.setAttribute("aria-selected", "true");
+
+            document.querySelectorAll(".tab-pane").forEach(pane => {
+                const isActive = (pane.id === targetTab);
+                pane.style.display = isActive ? "block" : "none";
+                pane.classList.toggle("active", isActive);
+            });
+        });
+    });
+
+    // Real-Time Modal Live Preview Sync as user types
+    function handleLivePreviewInput() {
+        const liveName = (pageFullName && pageFullName.value.trim()) || "Alex Rivera";
+        const liveTeam = (pageBusinessName && pageBusinessName.value.trim()) || "SolarTech Installer";
+        const liveArea = (pageCoverageArea && pageCoverageArea.value.trim()) || "Metro Manila";
+
+        const pName = document.getElementById("previewLiveName");
+        if (pName) pName.textContent = liveName;
+
+        const pSub = document.getElementById("previewLiveSub");
+        if (pSub) pSub.textContent = `Installer · ${liveTeam}`;
+
+        const pArea = document.getElementById("previewLiveArea");
+        if (pArea) pArea.textContent = liveArea.split(",")[0].trim();
+    }
+
+    if (pageFullName) pageFullName.addEventListener("input", handleLivePreviewInput);
+    if (pageBusinessName) pageBusinessName.addEventListener("input", handleLivePreviewInput);
+    if (pageCoverageArea) pageCoverageArea.addEventListener("input", handleLivePreviewInput);
+
+    // Interactive Copy-to-Clipboard Buttons
+    document.querySelectorAll(".btn-copy").forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const targetId = btn.getAttribute("data-copy-target");
+            const targetEl = document.getElementById(targetId);
+            if (!targetEl) return;
+            const textToCopy = targetEl.textContent.trim();
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(textToCopy);
+                } else {
+                    const tempInput = document.createElement("input");
+                    tempInput.value = textToCopy;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                }
+                const originalHtml = btn.innerHTML;
+                btn.classList.add("copied");
+                btn.innerHTML = `<span>Copied! ✓</span>`;
+                setTimeout(() => {
+                    btn.classList.remove("copied");
+                    btn.innerHTML = originalHtml;
+                }, 1800);
+            } catch (err) {
+                console.warn("Clipboard copy failed:", err);
+            }
+        });
+    });
+
+    // Reset Defaults Action inside Edit Profile Modal
+    const btnResetDefaults = document.getElementById("btnResetProfileDefaults");
+    if (btnResetDefaults) {
+        btnResetDefaults.addEventListener("click", () => {
+            if (confirm("Restore demo profile settings to defaults?")) {
+                saveStoredProfile(Object.assign({}, DEFAULT_INSTALLER_PROFILE));
+                syncAllProfileDisplays();
+                showProfileToast("Restored profile defaults! ✓");
+            }
+        });
+    }
+
+    // Toggle Accreditation Extra Details
+    const btnToggleAccreditation = document.getElementById("btnToggleAccreditation");
+    const accreditationExtraDetails = document.getElementById("accreditationExtraDetails");
+    if (btnToggleAccreditation && accreditationExtraDetails) {
+        btnToggleAccreditation.addEventListener("click", () => {
+            const isHidden = accreditationExtraDetails.hidden;
+            accreditationExtraDetails.hidden = !isHidden;
+            btnToggleAccreditation.textContent = isHidden ? "See less" : "See details";
+            btnToggleAccreditation.setAttribute("aria-expanded", String(isHidden));
         });
     }
 
@@ -774,13 +802,184 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3500);
     }
 
+    // --------------------------------------------------------------------------
+    // 8. HEADER QUICK PROFILE MODAL & LOGOUT CONTROLLER
+    // Injects and handles quick profile modal with profile info and logout action
+    // --------------------------------------------------------------------------
+    function initHeaderProfileModal() {
+        let modalEl = document.getElementById("headerProfileModal");
+        if (!modalEl) {
+            modalEl = document.createElement("div");
+            modalEl.id = "headerProfileModal";
+            modalEl.className = "header-profile-modal-backdrop";
+            modalEl.setAttribute("role", "dialog");
+            modalEl.setAttribute("aria-modal", "true");
+            modalEl.setAttribute("aria-labelledby", "headerProfileTitle");
+            modalEl.innerHTML = `
+                <div class="header-profile-modal-card">
+                    <div class="header-profile-modal-header">
+                        <span class="header-profile-modal-title" id="headerProfileTitle">Installer Account</span>
+                        <button type="button" class="header-profile-modal-close" id="btnCloseHeaderProfileModal" aria-label="Close profile modal">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="header-profile-modal-body">
+                        <div class="header-profile-identity">
+                            <div class="header-profile-avatar-large" id="headerModalAvatar">SI</div>
+                            <div class="header-profile-info">
+                                <div class="header-profile-name" id="headerModalName">Alex Rivera</div>
+                                <div class="header-profile-team" id="headerModalTeam">SolarTech Installer</div>
+                                <span class="header-profile-badge">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span>Tier 1 Accredited</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="header-profile-details">
+                            <div class="header-profile-detail-item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <span id="headerModalEmail">installer@hellosolar.ph</span>
+                            </div>
+                            <div class="header-profile-detail-item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                <span id="headerModalPhone">+63 917 555 0199</span>
+                            </div>
+                        </div>
+
+                        <div class="header-profile-nav">
+                            <a href="profile.html" class="header-profile-link" id="headerModalLinkProfile">
+                                <div class="header-profile-link-left">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    <span>View / Edit Profile</span>
+                                </div>
+                                <span class="header-profile-link-arrow">→</span>
+                            </a>
+                            <a href="profile.html?action=digital-id" class="header-profile-link" id="headerModalLinkDigitalId">
+                                <div class="header-profile-link-left">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                        <line x1="7" y1="8" x2="17" y2="8"></line>
+                                        <line x1="7" y1="12" x2="13" y2="12"></line>
+                                        <circle cx="16" cy="14" r="1.5"></circle>
+                                    </svg>
+                                    <span>Digital Installer Gate Pass</span>
+                                </div>
+                                <span class="header-profile-link-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="header-profile-modal-footer">
+                        <a href="login.html" class="profile-modal-logout-btn logout" id="headerModalLogoutBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Log Out</span>
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+        }
+
+        const closeBtn = document.getElementById("btnCloseHeaderProfileModal");
+        const linkProfile = document.getElementById("headerModalLinkProfile");
+        const linkDigitalId = document.getElementById("headerModalLinkDigitalId");
+
+        function openModal() {
+            syncAllProfileDisplays();
+            modalEl.classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            modalEl.classList.remove("open");
+            document.body.style.overflow = "";
+        }
+
+        // Attach triggers to topbar profile elements
+        document.querySelectorAll(".topbar .profile, .topbar a.profile").forEach(trigger => {
+            trigger.addEventListener("click", (e) => {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+        if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+        modalEl.addEventListener("click", (e) => {
+            if (e.target === modalEl) closeModal();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modalEl.classList.contains("open")) {
+                closeModal();
+            }
+        });
+
+        if (window.location.pathname.includes("profile.html")) {
+            if (linkProfile && typeof openEditProfileModal === "function") {
+                linkProfile.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    closeModal();
+                    openEditProfileModal();
+                });
+            }
+            if (linkDigitalId && typeof openDigitalIdModal === "function") {
+                linkDigitalId.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    closeModal();
+                    openDigitalIdModal();
+                });
+            }
+        }
+
+        // Export controls to window
+        window.openHeaderProfileModal = openModal;
+        window.closeHeaderProfileModal = closeModal;
+    }
+
+    initHeaderProfileModal();
+
+    // Deep link action handler for digital-id
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("action") === "digital-id" && typeof openDigitalIdModal === "function") {
+        setTimeout(() => {
+            openDigitalIdModal();
+        }, 150);
+    }
+
     // Export helpers to window
     window.HelloSolarProfile = {
         getProfile: getStoredProfile,
         saveProfile: saveStoredProfile,
         syncDisplays: syncAllProfileDisplays,
-        openModal: openProfileModal,
-        closeModal: closeProfileModal,
+        openModal: () => {
+            if (typeof window.openHeaderProfileModal === "function") {
+                window.openHeaderProfileModal();
+            }
+        },
+        closeModal: () => {
+            if (typeof window.closeHeaderProfileModal === "function") {
+                window.closeHeaderProfileModal();
+            }
+        },
         showToast: showProfileToast,
         computeInitials: computeInitials,
         processImageFile: processImageFile

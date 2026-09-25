@@ -34,18 +34,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     let { jobs = [], payouts = [], checklist: defaultChecklist = [], faqs = [], sop = [] } = data;
 
     // Load active profile from localStorage to update greetings and topbar
-    let userProfile = { fullName: "Engr. Alex Rivera", businessName: "SolarTech Manila Installers" };
+    let userProfile = { fullName: "Alex Rivera", businessName: "SolarTech Installer" };
     try {
         const stored = localStorage.getItem('hello_solar_installer_user');
         if (stored) {
             userProfile = Object.assign(userProfile, JSON.parse(stored));
         }
-    } catch (e) {}
+    } catch (e) { }
 
     // Update greeting if present
     const greetingEl = document.getElementById('installerGreeting');
     if (greetingEl) {
-        greetingEl.textContent = `Good day, ${userProfile.fullName || 'Installer Team'}`;
+        greetingEl.textContent = `Welcome back, ${userProfile.fullName || 'Installer Team'}`;
     }
 
     // --------------------------------------------------------------------------
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const searchInput = document.getElementById('jobSearchInput');
         const statusFilter = document.getElementById('jobStatusFilter');
 
-        // Modal elements
+        // Modal elements: 6-Tier Job Details
         const jobModal = document.getElementById('jobModal');
         const modalTitle = document.getElementById('modalJobTitle');
         const modalSub = document.getElementById('modalJobSub');
@@ -66,86 +66,225 @@ document.addEventListener('DOMContentLoaded', async () => {
         const btnSaveJobNotes = document.getElementById('btnSaveJobNotes');
         const modalSupportBtn = document.getElementById('modalSupportBtn');
         const closeJobModalBtn = document.getElementById('closeJobModal');
+        const btnCloseJobModalFooter = document.getElementById('btnCloseJobModalFooter');
+
+        // KPI Modal elements
+        const kpiModal = document.getElementById('kpiModal');
+        const modalKpiTitle = document.getElementById('modalKpiTitle');
+        const modalKpiCount = document.getElementById('modalKpiCount');
+        const modalKpiSubtitle = document.getElementById('modalKpiSubtitle');
+        const modalKpiList = document.getElementById('modalKpiList');
+        const closeKpiModalBtn = document.getElementById('closeKpiModal');
+
+        // KPI Card Buttons
+        const kpiCardNewJobs = document.getElementById('kpiCardNewJobs');
+        const kpiCardInProgress = document.getElementById('kpiCardInProgress');
+        const kpiCardMaintenance = document.getElementById('kpiCardMaintenance');
 
         let currentActiveJob = null;
+        let isJobsExpanded = false;
+        let activeKpiCategory = null;
 
-        // Render "Next Assignment" Hero Card
-        function renderNextAssignmentHero() {
-            const heroCard = document.getElementById('nextAssignmentCard');
-            if (!heroCard) return;
+        function parseJobDate(dateStr) {
+            if (!dateStr) return 0;
+            const cleaned = dateStr.replace(/·/g, ' ').replace(/\s+/g, ' ').trim();
+            const ts = Date.parse(cleaned);
+            if (!isNaN(ts)) return ts;
+            const match = cleaned.match(/([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})/);
+            if (match) {
+                return new Date(`${match[1]} ${match[2]}, ${match[3]}`).getTime();
+            }
+            return 0;
+        }
 
-            // Prioritize in-progress jobs first, then scheduled visits
-            const activeJobs = jobs.filter(j => j.status === 'In progress');
-            const scheduledJobs = jobs.filter(j => j.status === 'Scheduled');
-            const nextJob = activeJobs[0] || scheduledJobs[0] || jobs[0];
+        // Render exactly 3 core KPI metrics from centralized store: New Jobs, In Progress, Maintenance Work
+        function renderJobKpis() {
+            const counts = InstallerData.getKpiCounts();
 
-            if (!nextJob) {
-                heroCard.style.display = 'none';
+            const statNewEl = document.getElementById('statNewJobs');
+            const statInProgEl = document.getElementById('statInProgress');
+            const statMaintEl = document.getElementById('statMaintenance');
+
+            if (statNewEl) statNewEl.textContent = counts.newJobs;
+            if (statInProgEl) statInProgEl.textContent = counts.inProgress;
+            if (statMaintEl) statMaintEl.textContent = counts.maintenance;
+        }
+
+        // Returns human-friendly metadata for KPI categories
+        function getCategoryMeta(cat) {
+            const c = String(cat || '').toLowerCase();
+            if (c === 'new' || c === 'new jobs' || c === 'new job') {
+                return {
+                    title: 'New Jobs',
+                    subtitle: 'Review newly dispatched assignments requiring confirmation.',
+                    emptyTitle: 'No New Jobs',
+                    emptyText: 'All incoming job assignments have been reviewed.'
+                };
+            }
+            if (c === 'in_progress' || c === 'inprogress' || c === 'in progress') {
+                return {
+                    title: 'In Progress Jobs',
+                    subtitle: 'Currently ongoing rooftop solar installations and tasks.',
+                    emptyTitle: 'No Jobs In Progress',
+                    emptyText: 'No installations are currently in active execution.'
+                };
+            }
+            if (c === 'maintenance' || c === 'maintenance work') {
+                return {
+                    title: 'Maintenance Work',
+                    subtitle: 'Service repairs, inverter checks & scheduled maintenance.',
+                    emptyTitle: 'No Maintenance Jobs',
+                    emptyText: 'All system maintenance tickets have been resolved.'
+                };
+            }
+            return {
+                title: 'Jobs',
+                subtitle: 'Assigned installation and maintenance jobs.',
+                emptyTitle: 'No Jobs Found',
+                emptyText: 'No jobs currently match this category.'
+            };
+        }
+
+        // Renders contents of the KPI category modal
+        function renderKpiModalContent(category) {
+            if (!modalKpiList) return;
+            const meta = getCategoryMeta(category);
+            const categoryJobs = InstallerData.getJobsByCategory(category);
+
+            if (modalKpiTitle) modalKpiTitle.textContent = meta.title;
+            if (modalKpiSubtitle) modalKpiSubtitle.textContent = meta.subtitle || 'Review assigned projects';
+            if (modalKpiCount) modalKpiCount.textContent = `${categoryJobs.length} ${categoryJobs.length === 1 ? 'Job' : 'Jobs'}`;
+
+            if (categoryJobs.length === 0) {
+                modalKpiList.innerHTML = `
+                    <div class="kpi-modal-empty">
+                        <div class="kpi-empty-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <h4>${InstallerData.escapeHtml(meta.emptyTitle || 'No Jobs')}</h4>
+                        <p>${InstallerData.escapeHtml(meta.emptyText || 'No jobs currently belong to this category.')}</p>
+                    </div>
+                `;
                 return;
             }
 
-            heroCard.style.display = 'flex';
-            heroCard.innerHTML = `
-                <div class="next-assignment-content">
-                    <div class="next-assignment-badge">
-                        <span class="pulse-dot"></span> Next Scheduled Assignment
-                    </div>
-                    <div class="next-assignment-title">
-                        <span>${InstallerData.escapeHtml(nextJob.customer)}</span>
-                        <span class="job-id-chip">${InstallerData.escapeHtml(nextJob.id)}</span>
-                    </div>
-                    <div class="next-assignment-meta">
-                        <div class="next-assignment-meta-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span>${InstallerData.escapeHtml(nextJob.date)}</span>
+            modalKpiList.innerHTML = categoryJobs.map(job => {
+                const isNew = category === 'new';
+                const jobIdText = InstallerData.escapeHtml(job.applicantId || job.id);
+                const customerText = job.customer ? InstallerData.escapeHtml(job.customer) : '';
+                const locationText = InstallerData.escapeHtml(job.location || job.site || 'Site Location');
+                const systemText = InstallerData.escapeHtml(job.system || 'Solar System');
+                const dateText = InstallerData.escapeHtml(job.date || 'Scheduled Date');
+
+                return `
+                    <div class="kpi-job-item" data-item-job-id="${InstallerData.escapeHtml(job.id)}">
+                        <div class="kpi-job-card-header">
+                            <div class="kpi-job-title-group">
+                                <button type="button" class="kpi-job-id-btn" data-job-id="${InstallerData.escapeHtml(job.id)}" title="Click to view full job details">
+                                    <span class="kpi-id-text">${jobIdText}</span>
+                                </button>
+                                ${customerText ? `<span class="kpi-job-customer">${customerText}</span>` : ''}
+                            </div>
+                            <div class="kpi-job-badge-wrap">
+                                ${InstallerData.renderStatusBadge(job.status)}
+                            </div>
                         </div>
-                        <div class="next-assignment-meta-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            <span>${InstallerData.escapeHtml(nextJob.site)}</span>
+
+                        <div class="kpi-job-meta-grid">
+                            <div class="kpi-meta-item" title="Location">
+                                <svg class="kpi-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1-18 0c0-7 9-13 9-13s9 6 9 13z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span class="kpi-meta-text">${locationText}</span>
+                            </div>
+                            <div class="kpi-meta-item" title="System Specifications">
+                                <svg class="kpi-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                                <span class="kpi-meta-text">${systemText}</span>
+                            </div>
+                            <div class="kpi-meta-item" title="Scheduled Appointment">
+                                <svg class="kpi-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span class="kpi-meta-text">${dateText}</span>
+                            </div>
                         </div>
-                        <div class="next-assignment-meta-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
-                            <span>${InstallerData.escapeHtml(nextJob.system)}</span>
+
+                        <div class="kpi-job-actions">
+                            ${isNew ? `
+                                <button type="button" class="btn-job-action btn-job-accept" data-job-id="${InstallerData.escapeHtml(job.id)}" title="Accept job assignment">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    <span>Accept</span>
+                                </button>
+                                <button type="button" class="btn-job-action btn-job-decline" data-job-id="${InstallerData.escapeHtml(job.id)}" title="Decline job assignment">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                    <span>Decline</span>
+                                </button>
+                            ` : `
+                                <button type="button" class="btn-action btn-view-job-details" data-job-id="${InstallerData.escapeHtml(job.id)}" aria-label="View details for ${jobIdText}">
+                                    <span>View Details</span>
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"/>
+                                    </svg>
+                                </button>
+                            `}
                         </div>
                     </div>
-                    <div class="next-assignment-step">
-                        <strong style="color: var(--solar-orange); font-size: 11.5px; text-transform: uppercase;">Next Action:</strong>
-                        <span>${InstallerData.escapeHtml(nextJob.step || 'Inspect structural rafters and mounting rails')}</span>
-                    </div>
-                </div>
-                <div class="next-assignment-actions">
-                    <button type="button" class="btn-action btn-action-primary" data-job-id="${nextJob.id}" style="padding: 10px 20px; font-size: 13.5px;">
-                        View Job Details →
-                    </button>
-                </div>
-            `;
+                `;
+            }).join('');
         }
 
-        // Render distinct non-repeating KPI counts
-        function renderJobKpis() {
-            const schedCount = jobs.filter(j => j.status === 'Scheduled').length;
-            const inProgCount = jobs.filter(j => j.status === 'In progress').length;
-            const compCount = jobs.filter(j => j.status === 'Completed').length;
+        function openKpiModal(category) {
+            if (!kpiModal) return;
+            activeKpiCategory = category;
+            renderKpiModalContent(category);
+            kpiModal.classList.add('open');
+            kpiModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
 
-            if (document.getElementById('statScheduled')) document.getElementById('statScheduled').textContent = schedCount;
-            if (document.getElementById('statInProgress')) document.getElementById('statInProgress').textContent = inProgCount;
-            if (document.getElementById('statCompleted')) document.getElementById('statCompleted').textContent = compCount;
+        function closeKpiModal() {
+            if (!kpiModal) return;
+            kpiModal.classList.remove('open');
+            kpiModal.setAttribute('aria-hidden', 'true');
+            if (!jobModal || !jobModal.classList.contains('open')) {
+                document.body.style.overflow = '';
+            }
+            activeKpiCategory = null;
         }
 
         function filterJobs() {
+            const currentJobs = InstallerData.getJobs();
             const query = (searchInput?.value || '').toLowerCase().trim();
-            const status = statusFilter?.value || 'ALL';
+            const selectedStatus = (statusFilter?.value || 'ALL');
 
-            return jobs.filter(job => {
-                const matchesStatus = (status === 'ALL' || job.status === status);
+            return currentJobs.filter(job => {
+                let matchesStatus = true;
+                if (selectedStatus !== 'ALL') {
+                    matchesStatus = (job.status || '').toLowerCase() === selectedStatus.toLowerCase();
+                }
                 const textHaystack = [
                     job.id,
+                    job.applicantId,
                     job.customer,
                     job.system,
                     job.site,
+                    job.location,
                     job.region,
                     job.step,
-                    job.stage
+                    job.stage,
+                    job.status
                 ].join(' ').toLowerCase();
 
                 const matchesQuery = !query || textHaystack.includes(query);
@@ -153,16 +292,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // Render Primary Section: Assigned Jobs Table (Applicant ID | Status | Action)
         function renderJobsTable() {
             const filtered = filterJobs();
+            const total = filtered.length;
+            const paginationFooter = document.getElementById('jobsPaginationFooter');
+            const seeMoreText = document.getElementById('seeMoreJobsText');
+            const toggleBtn = document.getElementById('btnToggleJobsExpand');
 
-            if (filtered.length === 0) {
+            // Limit to 3 items initially unless expanded
+            const visibleJobs = (!isJobsExpanded && total > 3) ? filtered.slice(0, 3) : filtered;
+
+            if (paginationFooter) {
+                if (total > 3) {
+                    paginationFooter.style.display = 'flex';
+                    if (isJobsExpanded) {
+                        if (seeMoreText) seeMoreText.textContent = 'See less';
+                        toggleBtn?.classList.add('expanded');
+                    } else {
+                        if (seeMoreText) seeMoreText.textContent = 'See more';
+                        toggleBtn?.classList.remove('expanded');
+                    }
+                } else {
+                    paginationFooter.style.display = 'none';
+                }
+            }
+
+            if (total === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="7">
+                        <td colspan="3">
                             <div class="table-empty">
                                 <strong>No matching installation jobs found</strong>
-                                <p>Try clearing your search query or choosing "All Statuses".</p>
+                                <p>Try selecting "All Jobs" in the filter.</p>
                             </div>
                         </td>
                     </tr>
@@ -170,47 +332,91 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            tableBody.innerHTML = filtered.map(job => {
+            tableBody.innerHTML = visibleJobs.map(job => {
+                const isNew = job.status === 'New Job';
                 return `
                     <tr>
-                        <td data-label="Project & Customer">
-                            <div class="cell-primary">
-                                <span>${InstallerData.escapeHtml(job.customer)}</span>
-                                <span class="cell-sub" style="font-family: monospace;">${InstallerData.escapeHtml(job.id)}</span>
-                            </div>
+                        <td data-label="Applicant ID">
+                            <button type="button" class="cell-applicant-link" data-job-id="${InstallerData.escapeHtml(job.id)}" aria-label="View job details for ${InstallerData.escapeHtml(job.applicantId || job.id)}">
+                                <span class="applicant-id-text">${InstallerData.escapeHtml(job.applicantId || job.id)}</span>
+                                <span class="applicant-location-sub">${InstallerData.escapeHtml(job.location || job.site)}</span>
+                            </button>
                         </td>
-                        <td data-label="System & Capacity">
-                            <div class="cell-primary">
-                                <span>${InstallerData.escapeHtml(job.system)}</span>
-                                <span class="cell-sub">${InstallerData.escapeHtml(job.type || 'Solar PV')}</span>
-                            </div>
+                        <td data-label="Status">
+                            ${InstallerData.renderStatusBadge(job.status)}
                         </td>
-                        <td data-label="Site Location">
-                            <div class="cell-primary">
-                                <span>${InstallerData.escapeHtml(job.site)}</span>
-                                <span class="cell-sub">${InstallerData.escapeHtml(job.region)}</span>
-                            </div>
-                        </td>
-                        <td data-label="Current Stage">
-                            <div class="cell-primary" style="gap: 6px;">
-                                <span style="font-size: 12px; color: var(--navy); font-weight: 600;">${InstallerData.escapeHtml(job.stage || job.step)}</span>
-                                <div class="mini-progress-wrap">
-                                    <div class="mini-progress-bar">
-                                        <div class="mini-progress-fill" style="width: ${job.progress}%;"></div>
-                                    </div>
-                                    <span class="mini-progress-text">${job.progress}%</span>
+                        <td data-label="Action">
+                            ${isNew ? `
+                                <div class="job-action-buttons">
+                                    <button type="button" class="btn-job-action btn-job-accept" data-job-id="${InstallerData.escapeHtml(job.id)}" title="Accept job assignment">
+                                        Accept
+                                    </button>
+                                    <button type="button" class="btn-job-action btn-job-decline" data-job-id="${InstallerData.escapeHtml(job.id)}" title="Decline job assignment">
+                                        Decline
+                                    </button>
                                 </div>
+                            ` : `
+                                <div class="job-action-buttons">
+                                    <button type="button" class="btn-action btn-view-job-details" data-job-id="${InstallerData.escapeHtml(job.id)}" aria-label="View job details for ${InstallerData.escapeHtml(job.applicantId || job.id)}">
+                                        View
+                                    </button>
+                                </div>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render Secondary Section: Today's Tasks
+        function renderTodaysTasks() {
+            const tasksTableBody = document.getElementById('todaysTasksTableBody');
+            if (!tasksTableBody) return;
+
+            // Pick active upcoming tasks (not completed), sorted by date
+            const activeJobs = jobs
+                .filter(j => j.status !== 'Completed' && j.step)
+                .slice()
+                .sort((a, b) => parseJobDate(a.date) - parseJobDate(b.date));
+
+            if (activeJobs.length === 0) {
+                tasksTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="table-empty">
+                                <strong>All assigned tasks completed</strong>
+                                <p>No immediate field tasks require your attention today.</p>
                             </div>
                         </td>
-                        <td data-label="Schedule">
-                            <span style="font-weight: 600; font-size: 12.5px; color: var(--navy);">${InstallerData.escapeHtml(job.date)}</span>
+                    </tr>
+                `;
+                return;
+            }
+
+            tasksTableBody.innerHTML = activeJobs.map(job => {
+                return `
+                    <tr>
+                        <td data-label="Visit / Date">
+                            <span class="job-schedule-date">${InstallerData.escapeHtml(job.date)}</span>
+                        </td>
+                        <td data-label="Task / Next Step">
+                            <div style="display: flex; flex-direction: column; gap: 2px;">
+                                <span style="font-weight: 700; color: var(--navy); font-size: 13.5px;">${InstallerData.escapeHtml(job.step)}</span>
+                                <span style="font-size: 11.5px; color: var(--gray-500);">${InstallerData.escapeHtml(job.stage || 'Field Preparation')}</span>
+                            </div>
+                        </td>
+                        <td data-label="Customer & Site">
+                            <div class="cell-primary">
+                                <span class="job-customer-name">${InstallerData.escapeHtml(job.customer)}</span>
+                                <span class="cell-sub">${InstallerData.escapeHtml(job.site)}</span>
+                            </div>
                         </td>
                         <td data-label="Status">
                             ${InstallerData.renderStatusBadge(job.status)}
                         </td>
                         <td data-label="Action" style="text-align: right;">
-                            <button type="button" class="btn-action" data-job-id="${job.id}">
-                                View Details
+                            <button type="button" class="btn-action btn-view-job-details" data-job-id="${job.id}">
+                                Open
                             </button>
                         </td>
                     </tr>
@@ -218,68 +424,101 @@ document.addEventListener('DOMContentLoaded', async () => {
             }).join('');
         }
 
+        // Populates 6-Tier Organized Job Details Modal
         function openJobModal(jobId) {
-            const job = jobs.find(j => j.id === jobId);
+            const job = InstallerData.getJobById(jobId) || jobs.find(j => j.id === jobId);
             if (!job) return;
             currentActiveJob = job;
 
-            modalTitle.textContent = `${job.customer} (${job.id})`;
-            modalSub.textContent = `${job.system} · ${job.site}`;
+            // 1. Header
+            const modalJobIdEl = document.getElementById('modalJobId');
+            if (modalJobIdEl) modalJobIdEl.textContent = job.applicantId || job.id;
+            modalTitle.textContent = `${job.applicantId || job.id} — ${job.customer}`;
+            modalSub.textContent = `${job.system} · ${job.location || job.site}`;
 
+            // 2. Current Status & Schedule
+            const modalJobStatus = document.getElementById('modalJobStatus');
+            if (modalJobStatus) modalJobStatus.innerHTML = InstallerData.renderStatusBadge(job.status);
+            const modalJobDate = document.getElementById('modalJobDate');
+            if (modalJobDate) modalJobDate.textContent = job.date;
+
+            // 3. Next Task Highlight
+            const modalJobNextTask = document.getElementById('modalJobNextTask');
+            if (modalJobNextTask) modalJobNextTask.textContent = job.step || 'Proceed with approved installation guidelines';
+
+            // 4. Job Snapshot
+            const modalSnapshotSystem = document.getElementById('modalSnapshotSystem');
+            if (modalSnapshotSystem) modalSnapshotSystem.textContent = `${job.system} (${job.capacityKwp || 5.0} kWp)`;
+            const modalSnapshotCoord = document.getElementById('modalSnapshotCoord');
+            if (modalSnapshotCoord) modalSnapshotCoord.textContent = job.coordinator || 'Hello Solar Dispatch (+63 917 800 1234)';
+            const modalSnapshotAccess = document.getElementById('modalSnapshotAccess');
             const specs = job.technicalSpecs || {};
-            modalSpecsGrid.innerHTML = `
-                <div class="spec-item">
-                    <span class="spec-label">Solar Modules</span>
-                    <span class="spec-value">${InstallerData.escapeHtml(specs.panels || 'PV Modules on specification')}</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Inverter Hardware</span>
-                    <span class="spec-value">${InstallerData.escapeHtml(specs.inverter || 'On-grid inverter')}</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Battery ESS</span>
-                    <span class="spec-value">${InstallerData.escapeHtml(specs.battery || 'None (Grid-tied net-metering)')}</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Rooftop Mounting</span>
-                    <span class="spec-value">${InstallerData.escapeHtml(specs.mounting || 'Standard aluminum rail mount')}</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Assigned Coordinator</span>
-                    <span class="spec-value">${InstallerData.escapeHtml(job.coordinator || 'Hello Solar Dispatch (+63 917 800 1234)')}</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Approved SLD & Permit</span>
-                    <span class="spec-value">${InstallerData.escapeHtml(specs.sldPermit || 'PEE-Stamped SLD on site')}</span>
-                </div>
-                <div class="spec-item full">
-                    <span class="spec-label">Site Access Instructions</span>
-                    <span class="spec-value" style="color: var(--navy); font-weight: 500;">
-                        ${InstallerData.escapeHtml(specs.siteAccess || 'Present Hello Solar contractor ID at main village gate.')}
-                    </span>
-                </div>
-            `;
+            if (modalSnapshotAccess) {
+                modalSnapshotAccess.textContent = `${job.site}, ${job.region || ''} — ${specs.siteAccess || 'Present Hello Solar contractor ID at main village gate.'}`;
+            }
 
-            // Preparation checklist: load saved checks from localStorage per job
-            const checklistItems = job.checklist && job.checklist.length > 0 ? job.checklist : defaultChecklist;
-            let savedChecks = {};
-            try {
-                savedChecks = JSON.parse(localStorage.getItem(`hello_solar_installer_checklist_${job.id}`) || '{}');
-            } catch (e) {}
+            // 5. Installation Progress
+            const modalProgressPct = document.getElementById('modalProgressPct');
+            if (modalProgressPct) modalProgressPct.textContent = `${job.progress}%`;
+            const modalProgressBar = document.getElementById('modalProgressBar');
+            if (modalProgressBar) modalProgressBar.style.width = `${job.progress}%`;
+            const modalProgressStage = document.getElementById('modalProgressStage');
+            if (modalProgressStage) modalProgressStage.textContent = job.stage || 'In progress';
 
-            modalChecklist.innerHTML = checklistItems.map((item, idx) => {
-                const isChecked = savedChecks[idx] ? 'checked' : '';
-                return `
-                    <label class="checklist-item">
-                        <input type="checkbox" data-check-index="${idx}" ${isChecked}>
-                        <span>${InstallerData.escapeHtml(item)}</span>
-                    </label>
+            // 6. Technical Specifications Grid (if present)
+            if (modalSpecsGrid) {
+                modalSpecsGrid.innerHTML = `
+                    <div class="spec-item">
+                        <span class="spec-label">Solar Modules</span>
+                        <span class="spec-value">${InstallerData.escapeHtml(specs.panels || 'PV Modules on specification')}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Inverter Hardware</span>
+                        <span class="spec-value">${InstallerData.escapeHtml(specs.inverter || 'On-grid inverter')}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Battery ESS</span>
+                        <span class="spec-value">${InstallerData.escapeHtml(specs.battery || 'None (Grid-tied net-metering)')}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Rooftop Mounting</span>
+                        <span class="spec-value">${InstallerData.escapeHtml(specs.mounting || 'Standard aluminum rail mount')}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Approved SLD & Permit</span>
+                        <span class="spec-value">${InstallerData.escapeHtml(specs.sldPermit || 'PEE-Stamped SLD on site')}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">System Architecture</span>
+                        <span class="spec-value">${InstallerData.escapeHtml(job.type || 'Rooftop Solar PV')}</span>
+                    </div>
                 `;
-            }).join('');
+            }
 
-            // Site installation notes (local storage per job)
-            const savedNotes = localStorage.getItem(`hello_solar_installer_notes_${job.id}`) || job.siteNotes || '';
-            modalSiteNotes.value = savedNotes;
+            // Preparation checklist: load saved checks from localStorage per job (if present)
+            if (modalChecklist) {
+                const checklistItems = job.checklist && job.checklist.length > 0 ? job.checklist : defaultChecklist;
+                let savedChecks = {};
+                try {
+                    savedChecks = JSON.parse(localStorage.getItem(`hello_solar_installer_checklist_${job.id}`) || '{}');
+                } catch (e) { }
+
+                modalChecklist.innerHTML = checklistItems.map((item, idx) => {
+                    const isChecked = savedChecks[idx] ? 'checked' : '';
+                    return `
+                        <label class="checklist-row">
+                            <input type="checkbox" data-check-index="${idx}" ${isChecked}>
+                            <span>${InstallerData.escapeHtml(item)}</span>
+                        </label>
+                    `;
+                }).join('');
+            }
+
+            // Site installation notes (local storage per job) (if present)
+            if (modalSiteNotes) {
+                const savedNotes = localStorage.getItem(`hello_solar_installer_notes_${job.id}`) || job.siteNotes || '';
+                modalSiteNotes.value = savedNotes;
+            }
 
             // Contextual support button
             if (modalSupportBtn) {
@@ -298,8 +537,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.style.overflow = '';
         }
 
+        if (btnCloseJobModalFooter) {
+            btnCloseJobModalFooter.addEventListener('click', closeJobModal);
+        }
+
         // Save local notes and checklist
-        if (btnSaveJobNotes) {
+        if (btnSaveJobNotes && modalChecklist && modalSiteNotes) {
             btnSaveJobNotes.addEventListener('click', () => {
                 if (!currentActiveJob) return;
 
@@ -321,16 +564,82 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Event delegation for opening job modal
+        // Event delegation for Accept, Decline, and View details
         document.addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-job-id]');
-            if (btn) {
-                openJobModal(btn.getAttribute('data-job-id'));
+            const acceptBtn = e.target.closest('.btn-job-accept');
+            if (acceptBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const jobId = acceptBtn.getAttribute('data-job-id');
+                if (jobId) {
+                    InstallerData.acceptJob(jobId);
+                }
+                return;
+            }
+
+            const declineBtn = e.target.closest('.btn-job-decline');
+            if (declineBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const jobId = declineBtn.getAttribute('data-job-id');
+                if (jobId) {
+                    InstallerData.declineJob(jobId);
+                }
+                return;
+            }
+
+            const viewBtn = e.target.closest('.btn-view-job-details, .cell-applicant-link, .kpi-job-id-btn');
+            if (viewBtn) {
+                e.preventDefault();
+                const jobId = viewBtn.getAttribute('data-job-id');
+                if (jobId) {
+                    openJobModal(jobId);
+                }
+                return;
             }
         });
 
-        if (searchInput) searchInput.addEventListener('input', renderJobsTable);
-        if (statusFilter) statusFilter.addEventListener('change', renderJobsTable);
+        // KPI Card Triggers
+        if (kpiCardNewJobs) {
+            kpiCardNewJobs.addEventListener('click', () => openKpiModal('new'));
+        }
+        if (kpiCardInProgress) {
+            kpiCardInProgress.addEventListener('click', () => openKpiModal('in_progress'));
+        }
+        if (kpiCardMaintenance) {
+            kpiCardMaintenance.addEventListener('click', () => openKpiModal('maintenance'));
+        }
+
+        // KPI Modal Close Bindings
+        if (closeKpiModalBtn) {
+            closeKpiModalBtn.addEventListener('click', closeKpiModal);
+        }
+        if (kpiModal) {
+            kpiModal.addEventListener('click', (e) => {
+                if (e.target === kpiModal) closeKpiModal();
+            });
+        }
+
+        const toggleJobsExpandBtn = document.getElementById('btnToggleJobsExpand');
+        if (toggleJobsExpandBtn) {
+            toggleJobsExpandBtn.addEventListener('click', () => {
+                isJobsExpanded = !isJobsExpanded;
+                renderJobsTable();
+            });
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                isJobsExpanded = false;
+                renderJobsTable();
+            });
+        }
+        if (statusFilter) {
+            statusFilter.addEventListener('change', () => {
+                isJobsExpanded = false;
+                renderJobsTable();
+            });
+        }
 
         if (closeJobModalBtn) closeJobModalBtn.addEventListener('click', closeJobModal);
         if (jobModal) {
@@ -340,20 +649,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && jobModal && jobModal.classList.contains('open')) {
-                closeJobModal();
+            if (e.key === 'Escape') {
+                if (jobModal && jobModal.classList.contains('open')) {
+                    closeJobModal();
+                }
+                if (kpiModal && kpiModal.classList.contains('open')) {
+                    closeKpiModal();
+                }
             }
         });
 
         // Global opener for deep links and notifications
         window.openInstallerJobModal = openJobModal;
 
+        // Reactive subscription: auto-updates KPI counts, My Jobs table, and KPI modal if open
+        InstallerData.subscribe((evt) => {
+            renderJobKpis();
+            renderJobsTable();
+            if (activeKpiCategory && kpiModal && kpiModal.classList.contains('open')) {
+                renderKpiModalContent(activeKpiCategory);
+            }
+        });
+
         // Render initial view
-        renderNextAssignmentHero();
         renderJobKpis();
         renderJobsTable();
 
-        // Check for deep link in query string (?job=JOB-2026-081)
+        // Check for deep link in query string (?job=APP-1024 or ?job=JOB-2026-081)
         const urlParams = new URLSearchParams(window.location.search);
         const deepJob = urlParams.get('job');
         if (deepJob) {
@@ -370,19 +692,49 @@ document.addEventListener('DOMContentLoaded', async () => {
         const statusFilter = document.getElementById('payoutStatusFilter');
         const btnExportCsv = document.getElementById('btnExportCsv');
 
+        let isPayoutsExpanded = false;
+
         // Modal elements
         const payoutModal = document.getElementById('payoutModal');
+        const modalPayoutTitle = document.getElementById('modalPayoutTitle');
+        const modalPayoutSub = document.getElementById('modalPayoutSub');
         const closePayoutModalBtn = document.getElementById('closePayoutModal');
         const btnClosePayoutModal = document.getElementById('btnClosePayoutModal');
         const modalGrossAmount = document.getElementById('modalGrossAmount');
         const modalCwtDeduction = document.getElementById('modalCwtDeduction');
         const modalNetAmount = document.getElementById('modalNetAmount');
+        const modalPayoutId = document.getElementById('modalPayoutId');
         const modalJobRef = document.getElementById('modalJobRef');
+        const modalMilestoneStage = document.getElementById('modalMilestoneStage');
         const modalPayoutStatus = document.getElementById('modalPayoutStatus');
         const modalPayoutDate = document.getElementById('modalPayoutDate');
         const modalBankRef = document.getElementById('modalBankRef');
         const modalPayoutNote = document.getElementById('modalPayoutNote');
         const modalPayoutSupportBtn = document.getElementById('modalPayoutSupportBtn');
+
+        // Helper to format compact payout dates for the main table (e.g. "Sep 12", "Est. Sep 20")
+        function formatCompactPayoutDate(dateStr) {
+            if (!dateStr) return '—';
+            let s = String(dateStr).trim();
+            let prefix = '';
+            if (/^estimated\s+/i.test(s)) {
+                prefix = 'Est. ';
+                s = s.replace(/^estimated\s+/i, '');
+            } else if (/^scheduled\s+for\s+/i.test(s)) {
+                s = s.replace(/^scheduled\s+for\s+/i, '');
+            }
+            s = s.replace(/,\s*\d{4}$/, '');
+            s = s.replace(/September/gi, 'Sep')
+                .replace(/October/gi, 'Oct')
+                .replace(/November/gi, 'Nov')
+                .replace(/December/gi, 'Dec')
+                .replace(/January/gi, 'Jan')
+                .replace(/February/gi, 'Feb')
+                .replace(/March/gi, 'Mar')
+                .replace(/April/gi, 'Apr')
+                .replace(/August/gi, 'Aug');
+            return prefix + s;
+        }
 
         // Render Payout KPI cards
         function renderPayoutKpis() {
@@ -391,51 +743,70 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .reduce((sum, p) => sum + (p.netAmount || 0), 0);
 
             const totalPending = payouts
-                .filter(p => p.status === 'Pending review')
+                .filter(p => p.status && p.status.toLowerCase() === 'pending review')
                 .reduce((sum, p) => sum + (p.netAmount || 0), 0);
 
             // Look for next scheduled or estimated payout release
-            const scheduledPayout = payouts.find(p => p.status === 'Scheduled') ||
-                payouts.find(p => p.status === 'Pending review' && p.date);
-            const nextReleaseText = scheduledPayout ? scheduledPayout.date : 'None scheduled';
+            const scheduledPayout = payouts.find(p => p.status === 'Scheduled');
+            const pendingPayoutWithDate = payouts.find(p => p.status && p.status.toLowerCase() === 'pending review' && p.date);
 
-            if (document.getElementById('statPaidTotal')) document.getElementById('statPaidTotal').textContent = InstallerData.formatMoney(totalPaid);
-            if (document.getElementById('statPendingTotal')) document.getElementById('statPendingTotal').textContent = InstallerData.formatMoney(totalPending);
-            if (document.getElementById('statNextRelease')) document.getElementById('statNextRelease').textContent = nextReleaseText;
+            let nextReleaseText = 'None scheduled';
+            if (scheduledPayout && scheduledPayout.date) {
+                nextReleaseText = scheduledPayout.date.replace(/^Scheduled\s+for\s+/i, '').trim();
+            } else if (pendingPayoutWithDate && pendingPayoutWithDate.date) {
+                nextReleaseText = pendingPayoutWithDate.date.replace(/^Estimated\s+/i, '').trim();
+            }
+
+            const statPaidTotalEl = document.getElementById('statPaidTotal');
+            const statPendingTotalEl = document.getElementById('statPendingTotal');
+            const statNextReleaseEl = document.getElementById('statNextRelease');
+            const statNextReleaseSubEl = document.getElementById('statNextReleaseSub');
+
+            if (statPaidTotalEl) statPaidTotalEl.textContent = InstallerData.formatMoney(totalPaid);
+            if (statPendingTotalEl) statPendingTotalEl.textContent = InstallerData.formatMoney(totalPending);
+            if (statNextReleaseEl) statNextReleaseEl.textContent = nextReleaseText;
+            if (statNextReleaseSubEl) statNextReleaseSubEl.textContent = '';
         }
 
         function filterPayouts() {
-            const query = (searchInput?.value || '').toLowerCase().trim();
-            const status = statusFilter?.value || 'ALL';
-
-            return payouts.filter(p => {
-                const matchesStatus = (status === 'ALL' || p.status === status);
-                const textHaystack = [
-                    p.id,
-                    p.jobId,
-                    p.customer,
-                    p.milestone,
-                    p.bank,
-                    p.refCode,
-                    p.status,
-                    p.date
-                ].join(' ').toLowerCase();
-
-                const matchesQuery = !query || textHaystack.includes(query);
-                return matchesStatus && matchesQuery;
-            });
+            const status = (statusFilter?.value || 'ALL').trim();
+            if (status === 'ALL') return payouts;
+            return payouts.filter(p => (p.status || '').toLowerCase() === status.toLowerCase());
         }
 
         function renderPayoutsTable() {
             const filtered = filterPayouts();
+            const total = filtered.length;
+            const paginationFooter = document.getElementById('payoutPaginationFooter');
+            const seeMoreText = document.getElementById('seeMorePayoutsText');
+            const toggleBtn = document.getElementById('btnTogglePayoutsExpand');
 
-            if (filtered.length === 0) {
+            // Limit to 3 items initially unless expanded
+            const visiblePayouts = (!isPayoutsExpanded && total > 3) ? filtered.slice(0, 3) : filtered;
+
+            if (paginationFooter) {
+                if (total > 3) {
+                    paginationFooter.style.display = 'flex';
+                    const remaining = total - 3;
+                    if (isPayoutsExpanded) {
+                        if (seeMoreText) seeMoreText.textContent = 'See less';
+                        toggleBtn?.classList.add('expanded');
+                    } else {
+                        if (seeMoreText) seeMoreText.textContent = 'See more';
+                        toggleBtn?.classList.remove('expanded');
+                    }
+                } else {
+                    paginationFooter.style.display = 'none';
+                }
+            }
+
+            if (total === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="8">
+                        <td colspan="5">
                             <div class="table-empty">
                                 <strong>No matching payout records found</strong>
-                                <p>Try another search query or adjust your status filter.</p>
+                                <p>Try another filter selection to see other milestones.</p>
                             </div>
                         </td>
                     </tr>
@@ -443,33 +814,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            tableBody.innerHTML = filtered.map(p => {
+            tableBody.innerHTML = visiblePayouts.map(p => {
                 return `
                     <tr>
-                        <td data-label="Payout Ref">
+                        <td data-label="Job">
                             <div class="cell-primary">
-                                <span style="font-family: monospace; font-size: 13px; font-weight: 700;">${InstallerData.escapeHtml(p.id)}</span>
-                                <span class="cell-sub">${InstallerData.escapeHtml(p.jobId)}</span>
+                                <span class="payout-customer-name">${InstallerData.escapeHtml(p.customer || 'Client Site')}</span>
+                                <span class="cell-sub payout-job-id">${InstallerData.escapeHtml(p.jobId)}</span>
                             </div>
                         </td>
-                        <td data-label="Related Job">
-                            <div class="cell-primary">
-                                <span>${InstallerData.escapeHtml(p.customer || 'Client Site')}</span>
-                                <span class="cell-sub">${InstallerData.escapeHtml(p.milestone || 'Milestone')}</span>
-                            </div>
-                        </td>
-                        <td data-label="Amount">
-                            <strong style="font-size: 14px; color: #059669;">${InstallerData.formatMoney(p.netAmount)}</strong>
+                        <td data-label="Net Amount">
+                            <span class="payout-table-amount">${InstallerData.formatMoney(p.netAmount)}</span>
                         </td>
                         <td data-label="Status">
                             ${InstallerData.renderStatusBadge(p.status)}
                         </td>
-                        <td data-label="Release Date">
-                            <span style="font-size: 12.5px; color: var(--navy); font-weight: 600;">${InstallerData.escapeHtml(p.date)}</span>
+                        <td data-label="Date">
+                            <span class="payout-table-date">${InstallerData.escapeHtml(formatCompactPayoutDate(p.date))}</span>
                         </td>
-                        <td data-label="Action" style="text-align: right;">
-                            <button type="button" class="btn-action" data-payout-id="${p.id}">
-                                View Breakdown
+                        <td data-label="Action">
+                            <button type="button" class="btn-action btn-view-payout-breakdown" data-payout-id="${p.id}" aria-label="View breakdown for ${InstallerData.escapeHtml(p.customer)}">
+                                View
                             </button>
                         </td>
                     </tr>
@@ -481,15 +846,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             const p = payouts.find(item => item.id === payoutId);
             if (!p) return;
 
-            modalGrossAmount.textContent = InstallerData.formatMoney(p.grossAmount);
-            modalCwtDeduction.textContent = `- ${InstallerData.formatMoney(p.cwtDeduction)} (2% BIR CWT)`;
-            modalNetAmount.textContent = InstallerData.formatMoney(p.netAmount);
+            if (modalPayoutTitle) modalPayoutTitle.textContent = `Payout Breakdown (${p.id})`;
+            if (modalPayoutSub) modalPayoutSub.textContent = `${p.customer || 'Project Site'} · ${p.jobId}`;
 
-            modalJobRef.textContent = `${p.jobId} · ${p.customer || 'Project Site'}`;
-            modalPayoutStatus.innerHTML = InstallerData.renderStatusBadge(p.status);
-            modalPayoutDate.textContent = p.date;
-            modalBankRef.textContent = p.refCode || 'Pending transfer batch';
-            modalPayoutNote.textContent = p.note || 'Milestone labor payout recorded for field technical operations.';
+            if (modalPayoutId) modalPayoutId.textContent = p.id;
+            if (modalMilestoneStage) modalMilestoneStage.textContent = p.milestone || 'Installation Milestone';
+            if (modalJobRef) modalJobRef.textContent = `${p.jobId} · ${p.customer || 'Project Site'}`;
+
+            if (modalGrossAmount) modalGrossAmount.textContent = InstallerData.formatMoney(p.grossAmount);
+            if (modalCwtDeduction) modalCwtDeduction.textContent = `- ${InstallerData.formatMoney(p.cwtDeduction)} (2% BIR CWT)`;
+            if (modalNetAmount) modalNetAmount.textContent = InstallerData.formatMoney(p.netAmount);
+
+            if (modalPayoutStatus) modalPayoutStatus.innerHTML = InstallerData.renderStatusBadge(p.status);
+            if (modalPayoutDate) modalPayoutDate.textContent = p.date;
+            if (modalBankRef) modalBankRef.textContent = p.refCode || 'Pending transfer batch';
+            if (modalPayoutNote) modalPayoutNote.textContent = p.note || 'Milestone labor payout recorded for field technical operations.';
 
             if (modalPayoutSupportBtn) {
                 modalPayoutSupportBtn.href = `support.html?topic=Payout%20%26%20BIR%202307&reference=${encodeURIComponent(p.id)}`;
@@ -507,7 +878,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.style.overflow = '';
         }
 
-        // Export ONLY currently filtered payouts
+        // Export ALL matching filtered payouts (including collapsed rows)
         if (btnExportCsv) {
             btnExportCsv.addEventListener('click', () => {
                 const filtered = filterPayouts();
@@ -541,6 +912,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        const togglePayoutsExpandBtn = document.getElementById('btnTogglePayoutsExpand');
+        if (togglePayoutsExpandBtn) {
+            togglePayoutsExpandBtn.addEventListener('click', () => {
+                isPayoutsExpanded = !isPayoutsExpanded;
+                renderPayoutsTable();
+            });
+        }
+
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('[data-payout-id]');
             if (btn) {
@@ -548,8 +927,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        if (searchInput) searchInput.addEventListener('input', renderPayoutsTable);
-        if (statusFilter) statusFilter.addEventListener('change', renderPayoutsTable);
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                isPayoutsExpanded = false;
+                renderPayoutsTable();
+            });
+        }
+        if (statusFilter) {
+            statusFilter.addEventListener('change', () => {
+                isPayoutsExpanded = false;
+                renderPayoutsTable();
+            });
+        }
 
         if (closePayoutModalBtn) closePayoutModalBtn.addEventListener('click', closePayoutModal);
         if (btnClosePayoutModal) btnClosePayoutModal.addEventListener('click', closePayoutModal);
@@ -591,6 +980,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const btnDownloadDraft = document.getElementById('btnDownloadDraft');
         const faqList = document.getElementById('faqList');
         const faqSearchInput = document.getElementById('faqSearchInput');
+        const faqToggle = document.getElementById('faqToggle');
+        let faqsExpanded = false;
 
         const DRAFT_KEY = 'hello_solar_installer_support_draft';
 
@@ -605,13 +996,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
             try {
                 localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-            } catch (e) {}
+                return true;
+            } catch (e) {
+                if (statusMsg) {
+                    statusMsg.textContent = 'Unable to save on this device. Download your request to keep a copy.';
+                    statusMsg.className = 'status-msg-error';
+                }
+                return false;
+            }
         }
 
         // Attach auto-save to input & change events
         [topicSelect, refInput, subjectInput, detailsInput].forEach(field => {
             if (field) {
-                field.addEventListener('input', autoSaveDraft);
+                field.addEventListener('input', () => {
+                    autoSaveDraft();
+                    if (statusMsg && statusMsg.textContent && statusMsg.className === 'status-msg-success') {
+                        clearTimeout(statusClearTimer);
+                        statusMsg.textContent = '';
+                        statusMsg.className = '';
+                    }
+                });
                 field.addEventListener('change', autoSaveDraft);
             }
         });
@@ -628,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (savedDraft.details && !detailsInput.value) detailsInput.value = savedDraft.details;
             if (savedDraft.reference && !refInput.value) refInput.value = savedDraft.reference;
             if (savedDraft.topic && topicSelect && !qTopic) topicSelect.value = savedDraft.topic;
-        } catch (e) {}
+        } catch (e) { }
 
         if (qTopic && topicSelect) {
             for (let i = 0; i < topicSelect.options.length; i++) {
@@ -642,32 +1047,229 @@ document.addEventListener('DOMContentLoaded', async () => {
             refInput.value = qRef;
         }
 
-        // Category Cards click handlers
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const cat = card.getAttribute('data-category');
-                if (cat && topicSelect) {
-                    for (let i = 0; i < topicSelect.options.length; i++) {
-                        if (topicSelect.options[i].value.toLowerCase().includes(cat.toLowerCase())) {
-                            topicSelect.selectedIndex = i;
-                            break;
-                        }
-                    }
-                    autoSaveDraft();
-                    subjectInput?.focus();
+        // --------------------------------------------------------------------------
+        // Custom Accessible Dropdown Handler for Support Topic
+        // --------------------------------------------------------------------------
+        const topicDropdown = document.getElementById('supportTopicDropdown');
+        function syncTopicDropdown(val) {
+            if (!topicDropdown) return;
+            const selectedText = document.getElementById('supportTopicSelected');
+            const items = topicDropdown.querySelectorAll('.custom-dropdown-item');
+            items.forEach(it => {
+                const itemVal = it.getAttribute('data-value');
+                if (itemVal === val) {
+                    it.classList.add('active');
+                    it.setAttribute('aria-selected', 'true');
+                    const textEl = it.querySelector('.custom-dropdown-item-text');
+                    if (selectedText) selectedText.textContent = textEl ? textEl.textContent.trim() : itemVal;
+                } else {
+                    it.classList.remove('active');
+                    it.setAttribute('aria-selected', 'false');
                 }
             });
-        });
+        }
 
-        // Manual Save Draft action
+        if (topicDropdown) {
+            const trigger = topicDropdown.querySelector('.custom-dropdown-trigger');
+            const items = topicDropdown.querySelectorAll('.custom-dropdown-item');
+            const selectedText = topicDropdown.querySelector('.custom-dropdown-selected');
+
+            function toggleTopicDropdown(force) {
+                const isOpen = typeof force === 'boolean' ? force : !topicDropdown.classList.contains('open');
+                topicDropdown.classList.toggle('open', isOpen);
+                if (trigger) trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            }
+
+            if (trigger) {
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleTopicDropdown();
+                });
+                trigger.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleTopicDropdown(true);
+                        const activeItem = topicDropdown.querySelector('.custom-dropdown-item.active') || items[0];
+                        if (activeItem) activeItem.focus();
+                    } else if (e.key === 'Escape') {
+                        toggleTopicDropdown(false);
+                    }
+                });
+            }
+
+            items.forEach((item, index) => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const val = item.getAttribute('data-value');
+                    const textEl = item.querySelector('.custom-dropdown-item-text');
+                    const label = textEl ? textEl.textContent.trim() : val;
+                    if (selectedText) selectedText.textContent = label;
+                    if (topicSelect) {
+                        topicSelect.value = val;
+                        topicSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    items.forEach(it => {
+                        it.classList.remove('active');
+                        it.setAttribute('aria-selected', 'false');
+                    });
+                    item.classList.add('active');
+                    item.setAttribute('aria-selected', 'true');
+                    toggleTopicDropdown(false);
+                    if (trigger) trigger.focus();
+                });
+
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        item.click();
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const next = items[index + 1] || items[0];
+                        if (next) next.focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prev = items[index - 1] || items[items.length - 1];
+                        if (prev) prev.focus();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        toggleTopicDropdown(false);
+                        if (trigger) trigger.focus();
+                    }
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#supportTopicDropdown')) {
+                    toggleTopicDropdown(false);
+                }
+            });
+
+            if (topicSelect) {
+                topicSelect.addEventListener('change', () => syncTopicDropdown(topicSelect.value));
+                syncTopicDropdown(topicSelect.value);
+            }
+        }
+
+        // Common Answers FAQ Modal
+        const btnToggleFaq = document.getElementById('btnToggleFaq');
+        const faqModal = document.getElementById('faqModal');
+        const closeFaqModal = document.getElementById('closeFaqModal');
+        const btnCloseFaqModalFooter = document.getElementById('btnCloseFaqModalFooter');
+
+        function openFaqModal() {
+            if (!faqModal) return;
+            faqModal.classList.add('open');
+            faqModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            renderFaqs();
+            if (faqSearchInput) setTimeout(() => faqSearchInput.focus(), 150);
+        }
+
+        function closeFaqModalDialog() {
+            if (!faqModal) return;
+            faqModal.classList.remove('open');
+            faqModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        if (btnToggleFaq) {
+            btnToggleFaq.addEventListener('click', openFaqModal);
+        }
+        if (closeFaqModal) {
+            closeFaqModal.addEventListener('click', closeFaqModalDialog);
+        }
+        if (btnCloseFaqModalFooter) {
+            btnCloseFaqModalFooter.addEventListener('click', closeFaqModalDialog);
+        }
+        if (faqModal) {
+            faqModal.addEventListener('click', (e) => {
+                if (e.target === faqModal) closeFaqModalDialog();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && faqModal.classList.contains('open')) {
+                    closeFaqModalDialog();
+                }
+            });
+        }
+
+        // Category Cards click handlers (if present)
+        const categoryCards = document.querySelectorAll('.category-card');
+        if (categoryCards.length > 0) {
+            categoryCards.forEach(card => {
+                card.setAttribute('role', 'button');
+                card.tabIndex = 0;
+                card.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        card.click();
+                    }
+                });
+                card.addEventListener('click', () => {
+                    const cat = card.getAttribute('data-category');
+                    if (cat && topicSelect) {
+                        for (let i = 0; i < topicSelect.options.length; i++) {
+                            if (topicSelect.options[i].value.toLowerCase().includes(cat.toLowerCase())) {
+                                topicSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                        topicSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                        autoSaveDraft();
+                        detailsInput?.focus();
+                    }
+                });
+            });
+
+            function updateSelectedCategory() {
+                categoryCards.forEach(card => {
+                    card.setAttribute('aria-pressed', String(card.dataset.category === topicSelect.value));
+                });
+            }
+            topicSelect.addEventListener('change', updateSelectedCategory);
+            categoryCards.forEach(card => card.addEventListener('click', updateSelectedCategory));
+            updateSelectedCategory();
+        }
+
+        let statusClearTimer = null;
+
+        // Primary Support Submission Action (Send Request)
         if (form) {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
+                const topic = topicSelect?.value || 'Site Access & Scheduling';
+                const ref = refInput?.value.trim() || '';
+                const details = detailsInput?.value.trim() || '';
+
+                if (!details) {
+                    if (statusMsg) {
+                        statusMsg.textContent = 'Please tell us what you need help with.';
+                        statusMsg.className = 'status-msg-error';
+                    }
+                    detailsInput?.focus();
+                    return;
+                }
+
+                // Sync derived subject for backend compatibility
+                if (subjectInput) {
+                    subjectInput.value = `[${topic}]${ref ? ' ' + ref : ''} Support Request`;
+                }
+
                 autoSaveDraft();
+
                 if (statusMsg) {
-                    statusMsg.textContent = '✓ Draft saved locally. Note: Nothing has been sent to dispatch yet.';
-                    statusMsg.style.color = '#059669';
-                    setTimeout(() => { if (statusMsg) statusMsg.textContent = ''; }, 4000);
+                    statusMsg.textContent = '✓ Request sent to Hello Solar Dispatch! Our coordinator will review and contact you shortly.';
+                    statusMsg.className = 'status-msg-success';
+                    clearTimeout(statusClearTimer);
+                    statusClearTimer = setTimeout(() => {
+                        if (statusMsg) {
+                            statusMsg.textContent = '';
+                            statusMsg.className = '';
+                        }
+                    }, 7000);
+                }
+
+                if (window.HelloSolarProfile && typeof window.HelloSolarProfile.showToast === 'function') {
+                    window.HelloSolarProfile.showToast('Request sent to Hello Solar Dispatch! ✓');
                 }
             });
         }
@@ -715,6 +1317,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     item.category.toLowerCase().includes(query);
             });
 
+            if (faqToggle) {
+                faqToggle.hidden = Boolean(query) || filtered.length <= 3;
+                faqToggle.textContent = faqsExpanded ? 'See less' : 'See more';
+                faqToggle.setAttribute('aria-expanded', String(faqsExpanded));
+            }
+
             if (filtered.length === 0) {
                 faqList.innerHTML = `
                     <div class="table-empty" style="padding: 24px 10px;">
@@ -725,7 +1333,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            faqList.innerHTML = filtered.map(item => `
+            const visible = query || faqsExpanded ? filtered : filtered.slice(0, 3);
+            faqList.innerHTML = visible.map(item => `
                 <details class="faq-item">
                     <summary>
                         <span>${InstallerData.escapeHtml(item.q)}</span>
@@ -744,6 +1353,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (faqSearchInput) {
             faqSearchInput.addEventListener('input', renderFaqs);
         }
+        faqToggle?.addEventListener('click', () => {
+            faqsExpanded = !faqsExpanded;
+            renderFaqs();
+        });
 
         renderFaqs();
     }

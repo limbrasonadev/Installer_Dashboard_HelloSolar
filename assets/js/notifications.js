@@ -9,81 +9,81 @@
 (function () {
     "use strict";
 
-    const STORAGE_KEY = "hello_solar_installer_notifications_store";
+    const STORAGE_KEY = "hello_solar_installer_notifications_store_v2";
     const CHANNEL_NAME = "hello_solar_notifications_bus";
     const CURRENT_ROLE = "installer";
 
-    // Installer Seed Events matching field operations lifecycle
+    // Installer Seed Events matching exact field operations requirements
     const DEFAULT_SEED = [
         {
             id: "notif-inst-001",
             recipientRole: "installer",
             recipientId: "*",
             eventType: "new_job_assigned",
-            sourceEventId: "evt-job-2026-083-assign",
-            recordId: "JOB-2026-083",
-            title: "New Job Assigned: Ridgeview Villa",
-            message: "10.8 kW Hybrid rooftop installation in Silang, Tagaytay City assigned to your crew.",
-            timestamp: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+            sourceEventId: "evt-app-1024-assign",
+            recordId: "APP-1024",
+            title: "New Job Assigned",
+            message: "APP-1024 · Cebu City",
+            timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
             readAt: null,
-            targetUrl: "myjob.html?job=JOB-2026-083",
-            actionLabel: "View Job Roster"
+            targetUrl: "myjob.html?job=APP-1024",
+            actionLabel: "Review Assignment"
         },
         {
             id: "notif-inst-002",
             recipientRole: "installer",
             recipientId: "*",
-            eventType: "job_schedule_changed",
-            sourceEventId: "evt-job-2026-081-resched",
-            recordId: "JOB-2026-081",
-            title: "Job Schedule Confirmed: Bautista Residence",
-            message: "Homeowner confirmed morning site staging for Friday, Sept 18 at 8:30 AM.",
-            timestamp: new Date(Date.now() - 75 * 60 * 1000).toISOString(),
+            eventType: "job_accepted",
+            sourceEventId: "evt-app-1027-accepted",
+            recordId: "APP-1027",
+            title: "Job Accepted",
+            message: "APP-1027 moved to In Progress",
+            timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
             readAt: null,
-            targetUrl: "myjob.html?job=JOB-2026-081",
-            actionLabel: "Check Site Access"
+            targetUrl: "myjob.html?job=APP-1027",
+            actionLabel: "View Work Order"
         },
         {
             id: "notif-inst-003",
             recipientRole: "installer",
             recipientId: "*",
-            eventType: "job_requirements_updated",
-            sourceEventId: "evt-job-2026-084-specs",
-            recordId: "JOB-2026-084",
-            title: "Requirements Updated: Makati Logistics Hub",
-            message: "Single-line diagram updated with dual bi-directional CT sensor positions.",
-            timestamp: new Date(Date.now() - 180 * 60 * 1000).toISOString(),
+            eventType: "maintenance_required",
+            sourceEventId: "evt-app-1031-maint",
+            recordId: "APP-1031",
+            title: "Maintenance Required",
+            message: "APP-1031 · Mandaue City",
+            timestamp: new Date(Date.now() - 95 * 60 * 1000).toISOString(),
             readAt: null,
-            targetUrl: "myjob.html?job=JOB-2026-084",
-            actionLabel: "Inspect SLD Specs"
+            targetUrl: "myjob.html?job=APP-1031",
+            actionLabel: "Open Job Details"
         },
         {
             id: "notif-inst-004",
             recipientRole: "installer",
             recipientId: "*",
-            eventType: "payout_status_updated",
-            sourceEventId: "evt-pay-2026-101-cleared",
-            recordId: "PAY-2026-101",
-            title: "Payout Disbursed: ₱18,130 Released",
-            message: "Milestone for Sy Residence (JOB-2026-085) credited to your registered BDO account.",
-            timestamp: new Date(Date.now() - 360 * 60 * 1000).toISOString(),
-            readAt: new Date(Date.now() - 300 * 60 * 1000).toISOString(),
-            targetUrl: "payout.html?payout=PAY-2026-101",
-            actionLabel: "View Receipt"
+            eventType: "installation_completed",
+            sourceEventId: "evt-app-1018-completed",
+            recordId: "APP-1018",
+            title: "Installation Completed",
+            message: "APP-1018 has been completed",
+            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+            readAt: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
+            targetUrl: "myjob.html?job=APP-1018",
+            actionLabel: "View Details"
         },
         {
             id: "notif-inst-005",
             recipientRole: "installer",
             recipientId: "*",
-            eventType: "support_response_received",
-            sourceEventId: "evt-sup-2026-042-reply",
-            recordId: "SUP-2026-042",
-            title: "Support Response: Dispatch Coordinator",
-            message: "Engr. Mark Villanueva approved the conduit attic routing request for Batasan Hills.",
-            timestamp: new Date(Date.now() - 540 * 60 * 1000).toISOString(),
-            readAt: new Date(Date.now() - 480 * 60 * 1000).toISOString(),
-            targetUrl: "support.html?reference=JOB-2026-081",
-            actionLabel: "Read Message"
+            eventType: "payout_status_updated",
+            sourceEventId: "evt-pay-101-disbursed",
+            recordId: "PAY-2026-101",
+            title: "Milestone Payout Disbursed",
+            message: "₱18,130 for APP-1018 credited to registered BDO account.",
+            timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString(),
+            readAt: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(),
+            targetUrl: "payout.html?payout=PAY-2026-101",
+            actionLabel: "View Receipt"
         }
     ];
 
@@ -305,7 +305,7 @@
                 const iconSvg = getEventIcon(n.eventType);
 
                 return `
-                <div class="notification-item ${isUnread ? "unread" : "read"}" data-id="${n.id}" data-url="${n.targetUrl || "myjob.html"}">
+                <div class="notification-item ${isUnread ? "unread" : "read"}" data-id="${n.id}" data-record-id="${escapeHtml(n.recordId || '')}" data-url="${n.targetUrl || "myjob.html"}">
                     <div class="notif-item-icon">
                         ${iconSvg}
                     </div>
@@ -330,11 +330,25 @@
             el.addEventListener("click", () => {
                 const id = el.getAttribute("data-id");
                 const targetUrl = el.getAttribute("data-url");
+                const recordId = el.getAttribute("data-record-id");
                 NotificationService.markAsRead([id]);
                 updateBadge();
+                closePanel();
+
+                if (recordId && (recordId.startsWith('APP-') || recordId.startsWith('JOB-'))) {
+                    const currentPath = window.location.pathname.split("/").pop() || "myjob.html";
+                    if (currentPath === "myjob.html" || currentPath === "" || currentPath === "index.html") {
+                        if (typeof window.openInstallerJobModal === 'function') {
+                            window.openInstallerJobModal(recordId);
+                            return;
+                        }
+                    } else {
+                        window.location.href = `myjob.html?job=${encodeURIComponent(recordId)}`;
+                        return;
+                    }
+                }
 
                 if (targetUrl) {
-                    closePanel();
                     handleRecordNavigation(targetUrl);
                 }
             });
@@ -449,7 +463,10 @@
         backdrop.classList.add("open");
         document.body.classList.add("notification-panel-open");
 
-        if (bellBtn) bellBtn.setAttribute("aria-expanded", "true");
+        if (bellBtn) {
+            bellBtn.setAttribute("aria-expanded", "true");
+            bellBtn.classList.add("active");
+        }
         renderNotificationList();
 
         // Mark visible unread items as read upon opening
@@ -476,6 +493,7 @@
 
         if (bellBtn) {
             bellBtn.setAttribute("aria-expanded", "false");
+            bellBtn.classList.remove("active");
         }
     }
 

@@ -1,16 +1,19 @@
 /* ==========================================================================
    HELLO SOLAR INSTALLER PORTAL — WORKSPACE & DATA STYLES
-   Adhering to Simplicity & Detail Requirements:
-   Minimal but not empty, detailed but not crowded, professional & easy to navigate.
+   Unified Hello Solar Design System (Aligned with Merchant Dashboard)
+   Warm neutral background (#FAF7F2), Pure White Cards (#FFFFFF), 
+   Subtle Borders (#E5E0D8), Solar Orange Accent (#FF8400),
+   Plus Jakarta Sans typography, Static hover outlines (no translateY).
    ========================================================================== */
 
 /* Page Container */
 .installer-workspace {
-    max-width: 1240px;
+    max-width: 1280px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
+    padding-bottom: 24px;
 }
 
 /* Page Header */
@@ -55,45 +58,264 @@
     flex-wrap: wrap;
 }
 
-/* KPI Stat Cards Grid */
-.installer-stats-grid {
+/* ==========================================================================
+   NEXT ASSIGNMENT HERO SECTION
+   Clean white card, 16px radius, solar orange left border
+   ========================================================================== */
+.next-assignment-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--solar-orange);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    position: relative;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.next-assignment-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: var(--solar-orange);
+    border-left-color: var(--solar-orange);
+}
+
+.next-job-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    flex: 1;
+}
+
+.next-job-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: #FFF8EB;
+    border: 1px solid #FFE8CC;
+    color: var(--solar-orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.next-job-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.next-job-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.next-job-tag {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--solar-orange);
+}
+
+.next-job-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.25;
+    margin: 0;
+}
+
+.next-job-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--gray-500);
+    margin: 2px 0 4px;
+}
+
+.next-job-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.next-job-meta-item svg {
+    color: var(--solar-orange);
+    flex-shrink: 0;
+}
+
+.next-job-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    flex-wrap: wrap;
+}
+
+.next-job-action-label {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.next-job-action-text {
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.next-job-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.next-job-actions .btn-action {
+    padding: 9px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   KPI STAT CARDS GRID
+   Pure white, 16px radius, subtle border, static orange border on hover
+   ========================================================================== */
+.installer-stats-grid,
+#jobsStatsGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+    width: 100%;
+}
+
+.installer-stats-grid.cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.installer-stats-grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .stat-card {
     background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    padding: 18px 20px;
-    box-shadow: var(--shadow-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    justify-content: space-between;
+    min-height: 100px;
+    min-width: 0;
+    gap: 6px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-    border-color: var(--gray-300);
+    border-color: var(--solar-orange);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: none; /* strictly static hover */
+}
+
+/* Interactive KPI Cards */
+button.stat-card.stat-card-interactive {
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    width: 100%;
+    outline: none;
+    position: relative;
+    user-select: none;
+    appearance: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+button.stat-card.stat-card-interactive:hover {
+    border-color: #ff8400;
+    box-shadow: 0 6px 16px rgba(255, 132, 0, 0.12);
+    transform: translateY(-1px);
+}
+
+button.stat-card.stat-card-interactive:active {
+    transform: translateY(0);
+}
+
+button.stat-card.stat-card-interactive:focus-visible {
+    outline: 2px solid #ff8400;
+    outline-offset: 2px;
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.stat-card-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: var(--gray-400);
+    transition: transform var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+button.stat-card.stat-card-interactive:hover .stat-card-arrow {
+    color: #ff8400;
+    background: rgba(255, 132, 0, 0.1);
+    transform: translateX(2px);
+}
+
+.stat-hint {
+    font-size: 11.5px;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+/* Priority Card Accent */
+.stat-card.stat-card-accent,
+#payoutStatsGrid > .stat-card:nth-child(2) {
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--solar-orange);
+    border-radius: var(--radius-lg);
+}
+
+.stat-card.stat-card-accent:hover,
+#payoutStatsGrid > .stat-card:nth-child(2):hover {
+    border-color: var(--solar-orange);
+    border-left-color: var(--solar-orange);
 }
 
 .stat-label {
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     color: var(--gray-500);
+    margin-bottom: 2px;
 }
 
 .stat-value {
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 800;
     color: var(--navy);
-    line-height: 1.2;
-    margin: 2px 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .stat-sub {
@@ -102,28 +324,126 @@
 }
 
 .stat-sub.positive {
-    color: #059669;
+    color: #10B981;
     font-weight: 600;
 }
 
-/* Panel Card */
+/* ==========================================================================
+   PANEL CARDS & TOOLBARS
+   ========================================================================== */
 .panel-card {
     background: var(--white);
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-card);
     overflow: hidden;
 }
 
 .panel-header {
     padding: 18px 24px;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
-    background: #ffffff;
+    background: var(--white);
+}
+
+.jobs-panel-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--white);
+}
+
+.jobs-panel-header .panel-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.2;
+    margin: 0;
+}
+
+.jobs-panel-header .table-toolbar {
+    padding: 0;
+    border-bottom: none;
+    background: transparent;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.jobs-filter-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-label,
+.jobs-filter-wrap .filter-label {
+    font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif) !important;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    user-select: none;
+    letter-spacing: -0.01em;
+}
+
+.jobs-panel-header .toolbar-filters {
+    margin: 0;
+}
+
+.jobs-panel-header .toolbar-select,
+.jobs-panel-header .filter-select,
+.toolbar-select,
+.filter-select {
+    min-height: 40px;
+    height: 40px;
+    font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif) !important;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 0 36px 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    color: var(--navy);
+    background: var(--white) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2357534E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 12px center;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.jobs-panel-header .toolbar-select:hover,
+.jobs-panel-header .filter-select:hover,
+.toolbar-select:hover,
+.filter-select:hover {
+    border-color: var(--solar-orange);
+}
+
+.jobs-panel-header .toolbar-select:focus,
+.jobs-panel-header .filter-select:focus,
+.toolbar-select:focus,
+.filter-select:focus {
+    border-color: var(--solar-orange);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 132, 0, 0.12);
+}
+
+.filter-select option,
+.toolbar-select option {
+    font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif) !important;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--navy);
+    background-color: var(--white);
+    padding: 8px 12px;
 }
 
 .panel-title-group h2,
@@ -143,8 +463,8 @@
 /* Table Filter & Search Toolbar */
 .table-toolbar {
     padding: 14px 24px;
-    background: var(--gray-50);
-    border-bottom: 1px solid var(--gray-200);
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -173,19 +493,19 @@
     width: 100%;
     height: 38px;
     padding: 0 14px 0 36px;
-    border: 1px solid var(--gray-300);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    font-size: 13.5px;
+    font-size: 13px;
     font-family: inherit;
     background: var(--white);
     color: var(--navy);
     outline: none;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .toolbar-search input:focus {
     border-color: var(--solar-orange);
-    box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.12);
+    box-shadow: 0 0 0 3px rgba(255, 132, 0, 0.15);
 }
 
 .toolbar-filters {
@@ -195,27 +515,33 @@
 }
 
 .toolbar-select {
-    height: 38px;
-    padding: 0 32px 0 12px;
-    border: 1px solid var(--gray-300);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: inherit;
+    min-height: 40px;
+    height: 40px;
+    padding: 0 36px 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    font-size: 13.5px;
+    font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif) !important;
     font-weight: 600;
-    background: var(--white) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 10px center;
+    background: var(--white) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2357534E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 12px center;
     color: var(--navy);
     outline: none;
     cursor: pointer;
     appearance: none;
-    transition: all var(--transition-fast);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .toolbar-select:focus {
     border-color: var(--solar-orange);
-    box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.12);
+    box-shadow: 0 0 0 3px rgba(255, 132, 0, 0.12);
 }
 
-/* Scannable Data Tables */
+/* ==========================================================================
+   SCANNABLE DATA TABLES
+   Row hover keeps white background with perimeter solar-orange outline
+   ========================================================================== */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -224,40 +550,243 @@
 
 .data-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
-    text-align: left;
+    text-align: center;
     font-size: 13.5px;
 }
 
 .data-table th {
-    background: #f8fafc;
-    color: var(--gray-600);
-    font-size: 11.5px;
-    font-weight: 700;
+    background: #FFFFFF;
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--gray-200);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
     white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.data-table th:first-child,
+.data-table td:first-child,
+.data-table th:last-child,
+.data-table td:last-child {
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
 }
 
 .data-table td {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--gray-200);
+    padding: 16px 16px;
+    border-bottom: 1px solid #F3EFEA;
     color: var(--navy);
     vertical-align: middle;
+    text-align: center;
+    background: var(--white);
+    transition: box-shadow var(--transition-fast);
+    box-sizing: border-box;
 }
 
 .data-table tbody tr {
+    background: var(--white);
     transition: background var(--transition-fast);
 }
 
+/* Unified Perimeter Outline Table Hover */
 .data-table tbody tr:hover {
-    background: #fffbf2;
+    background: var(--white) !important;
+}
+
+.data-table tbody tr:hover td {
+    box-shadow: inset 0 1px 0 var(--solar-orange), inset 0 -1px 0 var(--solar-orange);
+}
+
+.data-table tbody tr:hover td:first-child {
+    box-shadow: inset 1px 0 0 var(--solar-orange), inset 0 1px 0 var(--solar-orange), inset 0 -1px 0 var(--solar-orange);
+}
+
+.data-table tbody tr:hover td:last-child {
+    box-shadow: inset -1px 0 0 var(--solar-orange), inset 0 1px 0 var(--solar-orange), inset 0 -1px 0 var(--solar-orange);
 }
 
 .data-table tbody tr:last-child td {
     border-bottom: none;
+}
+
+/* ==========================================================================
+   EVEN & PRECISE TABLE COLUMNS & DATA (Applied to Every Table)
+   Ensures mathematically equal column widths, crisp left-alignment for primary
+   identifiers (Applicant ID / Job), and centered badges/actions.
+   ========================================================================== */
+#jobsTable,
+#payoutsTable,
+.data-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+#jobsTable th,
+#jobsTable td,
+#payoutsTable th,
+#payoutsTable td,
+.data-table th,
+.data-table td {
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+/* Primary First Column (Applicant ID / Job): Left-aligned with clean 24px indent */
+#jobsTable th:first-child,
+#jobsTable td:first-child,
+#payoutsTable th:first-child,
+#payoutsTable td:first-child,
+.data-table th:first-child,
+.data-table td:first-child {
+    text-align: left;
+    padding-left: 24px;
+    padding-right: 16px;
+}
+
+/* Middle and Action Columns: Centered */
+#jobsTable th:nth-child(2),
+#jobsTable td:nth-child(2),
+#jobsTable th:nth-child(3),
+#jobsTable td:nth-child(3),
+#payoutsTable th:not(:first-child),
+#payoutsTable td:not(:first-child) {
+    text-align: center;
+}
+
+/* Exactly Even 3-Column Distribution (My Jobs: Applicant ID | Status | Action) */
+#jobsTable th,
+#jobsTable td,
+.data-table.cols-3 th,
+.data-table.cols-3 td {
+    width: 33.3333%;
+}
+
+/* Exactly Even 5-Column Distribution (Payouts: Job | Net Amount | Status | Date | Action) */
+#payoutsTable th,
+#payoutsTable td,
+.data-table.cols-5 th,
+.data-table.cols-5 td {
+    width: 20%;
+}
+
+/* Clean Borderless Applicant ID Link & #ff8400 Hover */
+.cell-applicant-link,
+#jobsTable .cell-applicant-link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    margin: 0;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
+}
+
+.applicant-id-text,
+#jobsTable .applicant-id-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    text-align: left;
+    display: block;
+    line-height: 1.3;
+    transition: color var(--transition-fast);
+}
+
+.applicant-location-sub,
+#jobsTable .applicant-location-sub {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-top: 2px;
+    text-align: left;
+    display: block;
+    line-height: 1.3;
+    transition: color var(--transition-fast);
+}
+
+/* Explicit Hover Color #ff8400 on text */
+.cell-applicant-link:hover .applicant-id-text,
+.cell-applicant-link:focus-visible .applicant-id-text,
+#jobsTable .cell-applicant-link:hover .applicant-id-text,
+#jobsTable .cell-applicant-link:focus-visible .applicant-id-text {
+    color: #ff8400 !important;
+}
+
+.cell-applicant-link:hover .applicant-location-sub,
+.cell-applicant-link:focus-visible .applicant-location-sub,
+#jobsTable .cell-applicant-link:hover .applicant-location-sub,
+#jobsTable .cell-applicant-link:focus-visible .applicant-location-sub {
+    color: #ff8400 !important;
+}
+
+.data-table .status-badge,
+#jobsTable .status-badge,
+#payoutsTable .status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.data-table .job-action-buttons,
+#jobsTable .job-action-buttons {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.data-table .cell-primary,
+#payoutsTable .cell-primary {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    margin: 0;
+}
+
+.data-table .payout-customer-name,
+.data-table .payout-job-id,
+#payoutsTable .payout-customer-name,
+#payoutsTable .payout-job-id {
+    text-align: left;
+    display: block;
+    width: 100%;
+}
+
+.data-table .payout-table-amount,
+.data-table .payout-table-date,
+#payoutsTable .payout-table-amount,
+#payoutsTable .payout-table-date {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+.data-table .btn-action,
+#payoutsTable .btn-action {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
 }
 
 /* Primary Cell Styling */
@@ -275,7 +804,85 @@
     color: var(--gray-500);
 }
 
-/* Status Badges */
+/* Table Specific Elements */
+.job-customer-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.3;
+}
+
+.job-site-location {
+    font-size: 12.5px;
+    color: var(--gray-500);
+}
+
+.job-inline-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    padding: 3px 8px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    font-size: 11.5px;
+    line-height: 1.3;
+    max-width: fit-content;
+}
+
+.job-inline-action .action-tag {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--solar-orange);
+}
+
+.job-inline-action .action-desc {
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+.job-schedule-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+}
+
+.payout-customer-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.3;
+}
+
+.payout-job-id {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-500);
+    font-family: monospace;
+}
+
+.payout-table-amount {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--navy);
+    white-space: nowrap;
+}
+
+.payout-table-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   STATUS BADGES (Unified System)
+   Subtle tint backgrounds, 1px soft border, clearly readable text, 6px dot
+   ========================================================================== */
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -286,35 +893,497 @@
     font-weight: 700;
     white-space: nowrap;
     width: fit-content;
+    border: 1px solid transparent;
+    line-height: 1.2;
 }
 
 .badge-dot {
-    font-size: 8px;
-    line-height: 1;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    background: currentColor;
+    font-size: 0;
 }
 
-.badge-success {
-    background: #ecfdf5;
-    color: #059669;
-    border: 1px solid #a7f3d0;
+/* Maintenance — Red */
+.badge-danger,
+.badge-maintenance,
+.badge-delayed,
+.badge-error {
+    background: #FEF2F2 !important;
+    color: #DC2626 !important;
+    border: 1px solid #FCA5A5 !important;
 }
 
-.badge-progress {
-    background: #fff7ed;
-    color: #c2410c;
-    border: 1px solid #fed7aa;
+/* In progress — Orange */
+.badge-progress,
+.badge-inprogress,
+.badge-info,
+.badge-warning,
+.badge-pending {
+    background: #FFF7ED !important;
+    color: #EA580C !important;
+    border: 1px solid #FDBA74 !important;
 }
 
-.badge-info {
-    background: #eff6ff;
-    color: #1d4ed8;
-    border: 1px solid #bfdbfe;
+/* Success / Completed — Green */
+.badge-success,
+.badge-completed {
+    background: #F0FDF4 !important;
+    color: #16A34A !important;
+    border: 1px solid #86EFAC !important;
 }
 
-.badge-warning {
-    background: #fefce8;
-    color: #a16207;
-    border: 1px solid #fef08a;
+/* New Job — Subtle Blue */
+.badge-new {
+    background: #EFF6FF !important;
+    color: #2563EB !important;
+    border: 1px solid #BFDBFE !important;
+}
+
+/* Declined — Subtle Neutral */
+.badge-declined {
+    background: #F5F5F4 !important;
+    color: #78716C !important;
+    border: 1px solid #E7E5E4 !important;
+}
+
+/* ==========================================================================
+   MY JOBS: APPLICANT ID CELL & ACTIONS
+   ========================================================================== */
+.cell-applicant-link {
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    outline: none;
+    transition: transform var(--transition-fast);
+}
+
+.applicant-id-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    transition: color var(--transition-fast);
+}
+
+.cell-applicant-link:hover .applicant-id-text {
+    color: #ff8400;
+}
+
+.applicant-location-sub {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+.cell-applicant-link:hover .applicant-location-sub {
+    color: #ff8400;
+}
+
+.cell-applicant-link:focus-visible {
+    outline: 2px solid #ff8400;
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+}
+
+/* Job Action Buttons Group */
+.job-action-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-job-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: var(--radius-xs);
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    outline: none;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.btn-job-accept {
+    background: #ff8400;
+    color: #ffffff;
+    border: 1px solid #ff8400;
+    box-shadow: 0 1px 3px rgba(255, 132, 0, 0.25);
+}
+
+.btn-job-accept:hover {
+    background: #e07500;
+    border-color: #e07500;
+    box-shadow: 0 2px 6px rgba(255, 132, 0, 0.35);
+}
+
+.btn-job-accept:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 132, 0, 0.25);
+}
+
+.btn-job-decline {
+    background: #ffffff;
+    color: #57534e;
+    border: 1px solid var(--border);
+}
+
+.btn-job-decline:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+.btn-job-decline:focus-visible {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+/* ==========================================================================
+   KPI CATEGORY MODAL — Mobile-First, Highly Legible, Structured Architecture
+   ========================================================================== */
+.kpi-modal-card {
+    background: var(--white);
+    border-radius: var(--radius-lg, 18px);
+    width: 94%;
+    max-width: 580px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px -10px rgba(16, 26, 46, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    animation: modalSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.kpi-modal-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--white);
+    flex-shrink: 0;
+}
+
+.kpi-modal-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.kpi-modal-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+
+.kpi-modal-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kpi-modal-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    background: rgba(255, 132, 0, 0.12);
+    color: #e07500;
+    border: 1px solid rgba(255, 132, 0, 0.25);
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.2;
+}
+
+.kpi-modal-sub {
+    font-size: 11.5px;
+    color: var(--gray-500);
+    margin: 0;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kpi-modal-body {
+    padding: 16px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--surface-subtle, #fcfbf9);
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.kpi-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.kpi-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.kpi-modal-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+
+/* Job Card Item */
+.kpi-job-item {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md, 12px);
+    padding: 13px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.kpi-job-item:hover {
+    border-color: rgba(255, 132, 0, 0.45);
+    box-shadow: 0 4px 16px rgba(255, 132, 0, 0.08);
+}
+
+.kpi-job-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.kpi-job-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.kpi-job-id-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--navy);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    white-space: nowrap;
+    word-break: keep-all;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.kpi-job-id-btn:hover {
+    color: #ff8400;
+    text-decoration: underline;
+}
+
+.kpi-id-text {
+    white-space: nowrap;
+}
+
+.kpi-job-customer {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--gray-600);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kpi-job-badge-wrap {
+    flex-shrink: 0;
+}
+
+/* Metadata Chips Grid */
+.kpi-job-meta-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.kpi-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3.5px 7.5px;
+    background: var(--page-bg, #FAF7F2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--gray-700);
+    line-height: 1.25;
+}
+
+.kpi-meta-icon {
+    width: 12.5px;
+    height: 12.5px;
+    flex-shrink: 0;
+    color: #e07500;
+}
+
+.kpi-meta-text {
+    white-space: nowrap;
+}
+
+/* Actions Section */
+.kpi-job-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.kpi-job-actions:has(.btn-job-accept) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.kpi-job-actions .btn-job-action {
+    flex: 1;
+    min-height: 38px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: var(--radius-xs, 7px);
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    box-sizing: border-box;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+}
+
+.kpi-job-actions .btn-job-action svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.kpi-job-actions .btn-action,
+.kpi-job-actions .btn-view-job-details {
+    width: 100%;
+    min-height: 38px;
+    height: 38px;
+    border-radius: var(--radius-xs, 7px);
+    font-size: 12.5px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    color: var(--navy);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.kpi-job-actions .btn-action svg,
+.kpi-job-actions .btn-view-job-details svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.kpi-job-actions .btn-action:hover,
+.kpi-job-actions .btn-view-job-details:hover {
+    border-color: #ff8400;
+    color: #ff8400;
+    background: #fffcf8;
+}
+
+/* Empty State */
+.kpi-modal-empty {
+    padding: 42px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+}
+
+.kpi-empty-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 132, 0, 0.1);
+    color: #ff8400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.kpi-empty-icon-wrap svg {
+    width: 26px;
+    height: 26px;
+}
+
+.kpi-modal-empty h4 {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 6px 0;
+}
+
+.kpi-modal-empty p {
+    font-size: 13px;
+    color: var(--gray-500);
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.4;
 }
 
 /* Progress Mini Bar */
@@ -335,7 +1404,7 @@
 
 .mini-progress-fill {
     height: 100%;
-    background: var(--solar-gradient);
+    background: var(--solar-orange);
     border-radius: var(--radius-full);
 }
 
@@ -346,18 +1415,23 @@
     min-width: 32px;
 }
 
-/* Action Buttons */
+/* ==========================================================================
+   BUTTONS & ACTIONS
+   Primary: #FF8400 bg, #000 text; Hover: #FFF bg, #FF8400 border, #000 text
+   Secondary: #FFF bg, #000 text, border; Hover: #FFF bg, #FF8400 border, #000 text
+   ========================================================================== */
 .btn-action {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 6px 13px;
-    font-size: 12.5px;
-    font-weight: 700;
-    border-radius: var(--radius-xs);
-    border: 1px solid var(--gray-300);
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
     background: var(--white);
-    color: var(--navy);
+    color: #000000;
     cursor: pointer;
     text-decoration: none;
     transition: all var(--transition-fast);
@@ -365,37 +1439,113 @@
 }
 
 .btn-action:hover {
-    background: var(--gray-50);
+    background: var(--white);
     border-color: var(--solar-orange);
-    color: var(--solar-orange);
-    transform: translateY(-1px);
+    color: #000000;
+    transform: none; /* strictly static hover */
 }
 
 .btn-action-primary {
-    background: var(--solar-gradient);
-    color: var(--white);
-    border: none;
-    box-shadow: 0 2px 8px rgba(255, 138, 0, 0.25);
+    background: var(--solar-orange);
+    color: #000000;
+    border: 1px solid var(--solar-orange);
+    font-weight: 700;
+    box-shadow: none;
 }
 
 .btn-action-primary:hover {
-    color: var(--white);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 138, 0, 0.35);
+    background: var(--white);
+    color: #000000;
+    border-color: var(--solar-orange);
+    transform: none; /* strictly static hover */
+    box-shadow: none;
 }
 
-/* Collapsible Section (<details>) */
+.btn-view-job-details,
+.btn-view-payout-breakdown {
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: #000000;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-view-job-details:hover,
+.btn-view-payout-breakdown:hover {
+    border-color: var(--solar-orange);
+    color: #000000;
+    background: var(--white);
+}
+
+/* See More / See Less Toggle Footer */
+.table-pagination-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--white);
+}
+
+.btn-see-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy, #1E293B);
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none;
+    padding: 8px 14px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.btn-see-more:hover,
+.btn-see-more:focus-visible {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ff8400 !important;
+}
+
+.btn-see-more .chevron-icon {
+    stroke: currentColor;
+    transition: transform var(--transition-fast), stroke var(--transition-fast);
+}
+
+.btn-see-more:hover .chevron-icon,
+.btn-see-more:focus-visible .chevron-icon {
+    stroke: #ff8400 !important;
+}
+
+.btn-see-more.expanded .chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   COLLAPSIBLE SECTION (<details>) & SOP CARDS
+   ========================================================================== */
 .panel-accordion {
     background: var(--white);
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-card);
     overflow: hidden;
     transition: border-color var(--transition-fast);
 }
 
 .panel-accordion[open] {
-    border-color: #fed7aa;
+    border-color: var(--solar-orange);
 }
 
 .panel-accordion summary {
@@ -418,7 +1568,7 @@
 }
 
 .panel-accordion summary:hover {
-    background: #fffdf9;
+    background: #FFFCF8;
 }
 
 .accordion-title {
@@ -446,7 +1596,7 @@
 
 .accordion-body {
     padding: 18px 24px 24px;
-    border-top: 1px solid var(--gray-200);
+    border-top: 1px solid var(--border);
     background: var(--white);
     font-size: 13.5px;
     color: var(--gray-600);
@@ -464,8 +1614,13 @@
 .sop-card {
     padding: 14px 16px;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-    background: var(--gray-50);
+    border: 1px solid var(--border);
+    background: var(--white);
+    transition: border-color var(--transition-fast);
+}
+
+.sop-card:hover {
+    border-color: var(--solar-orange);
 }
 
 .sop-card-title {
@@ -481,7 +1636,9 @@
     line-height: 1.45;
 }
 
-/* Modal Windows (Progressive Disclosure) */
+/* ==========================================================================
+   MODAL WINDOWS (PROGRESSIVE DISCLOSURE)
+   ========================================================================== */
 .installer-modal-backdrop {
     position: fixed;
     inset: 0;
@@ -505,15 +1662,15 @@
 
 .installer-modal-card {
     background: var(--white);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     box-shadow: 0 24px 70px rgba(16, 26, 46, 0.2);
     width: 100%;
-    max-width: 640px;
+    max-width: 520px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     transform: scale(0.96) translateY(10px);
     transition: transform var(--transition-smooth);
 }
@@ -526,73 +1683,306 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--gray-200);
-    background: linear-gradient(135deg, #ffffff 0%, #fffbf2 100%);
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
 }
 
 .installer-modal-title {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 800;
     color: var(--navy);
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
 .installer-modal-sub {
-    font-size: 12.5px;
+    font-size: 11.5px;
     color: var(--gray-500);
-    margin-top: 3px;
+    margin-top: 2px;
 }
 
 .installer-modal-close {
-    width: 34px;
-    height: 34px;
-    border-radius: var(--radius-sm);
-    color: var(--gray-400);
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-xs, 7px);
+    color: var(--gray-500);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: transparent;
+    background: var(--gray-100, #F3F4F6);
     border: none;
     transition: all var(--transition-fast);
+    flex-shrink: 0;
+    padding: 0;
 }
 
 .installer-modal-close:hover {
     color: var(--navy);
-    background: var(--gray-100);
+    background: var(--gray-200, #E5E7EB);
+}
+
+.installer-modal-close svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.2;
 }
 
 .installer-modal-body {
-    padding: 22px 24px;
+    padding: 14px 18px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 9px;
 }
 
 .installer-modal-footer {
-    padding: 14px 24px;
-    background: var(--gray-50);
-    border-top: 1px solid var(--gray-200);
+    padding: 10px 18px;
+    background: var(--bg-main);
+    border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 8px;
+}
+
+/* Job ID Pill in Table */
+.job-id-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    background: #F5F1EB;
+    border: 1px solid #E5E0D8;
+    border-radius: var(--radius-xs);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: monospace;
+    color: #57534E;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Modal Header Eyebrow */
+.modal-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--solar-orange);
+    margin-bottom: 1px;
+}
+
+/* 2. Modal Status Strip */
+.modal-status-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    background: #FAF7F2;
+    border: 1px solid #E5E0D8;
+    border-radius: var(--radius-xs);
+    flex-wrap: wrap;
+}
+
+.modal-status-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-status-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-500);
+}
+
+.modal-status-val {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+/* 3. Modal Next Task Highlight */
+.modal-task-highlight {
+    background: #FFFFFF;
+    border: 1px solid #FFD8A8;
+    border-left: 3px solid var(--solar-orange);
+    border-radius: var(--radius-xs);
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.modal-task-tag {
+    font-size: 9.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--solar-orange);
+}
+
+.modal-task-text {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.35;
+}
+
+/* 4. Modal Snapshot Grid */
+.modal-snapshot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+}
+
+.snapshot-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    padding: 7px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.snapshot-card.full {
+    grid-column: 1 / -1;
+}
+
+.snapshot-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+}
+
+.snapshot-val {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.3;
+}
+
+/* 5. Modal Progress Section */
+.modal-progress-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-progress-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+}
+
+.modal-progress-pct {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--solar-orange);
+}
+
+.modal-progress-track {
+    width: 100%;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.modal-progress-bar {
+    height: 100%;
+    background: var(--solar-orange);
+    border-radius: var(--radius-full);
+    transition: width 300ms ease;
+}
+
+.modal-progress-stage {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+}
+
+/* 6. Modal Accordions */
+.modal-accordion {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--white);
+    transition: border-color var(--transition-fast);
+}
+
+.modal-accordion[open] {
+    border-color: #D6D0C5;
+}
+
+.modal-accordion summary {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    background: #FAF7F2;
+}
+
+.modal-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.modal-accordion summary:hover {
+    background: #F5F1EB;
+}
+
+.modal-chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--gray-500);
+    transition: transform var(--transition-fast);
+}
+
+.modal-accordion[open] .modal-chevron {
+    transform: rotate(180deg);
+}
+
+.accordion-inner {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
 }
 
 /* Technical Specs Grid inside Modal */
 .specs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 7px;
 }
 
 .spec-item {
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    padding: 7px 11px;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -603,7 +1993,7 @@
 }
 
 .spec-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -611,19 +2001,20 @@
 }
 
 .spec-value {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--navy);
+    line-height: 1.3;
 }
 
 /* Checklist Group inside Modal */
 .modal-section-title {
-    font-size: 13px;
+    font-size: 11.5px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--gray-500);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -632,71 +2023,74 @@
 .checklist-items {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .checklist-row {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    padding: 8px 12px;
+    gap: 8px;
+    padding: 7px 10px;
     border-radius: var(--radius-xs);
     background: var(--white);
-    border: 1px solid var(--gray-200);
-    font-size: 12.5px;
+    border: 1px solid var(--border);
+    font-size: 11.5px;
     color: var(--navy);
     cursor: pointer;
-    transition: background var(--transition-fast);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .checklist-row:hover {
-    background: #fffdfa;
+    background: #FFFCF8;
+    border-color: var(--solar-orange);
 }
 
 .checklist-row input[type="checkbox"] {
-    margin-top: 2px;
+    margin-top: 1px;
     accent-color: var(--solar-orange);
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     cursor: pointer;
 }
 
 /* Financial Tax Breakdown inside Payout Modal */
 .payout-breakdown-card {
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    padding: 16px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
 }
 
 .payout-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 13.5px;
+    font-size: 12px;
 }
 
 .payout-row.sub {
     color: var(--gray-600);
-    font-size: 12.5px;
+    font-size: 11px;
 }
 
 .payout-row.highlight {
-    padding-top: 10px;
-    border-top: 1px dashed var(--gray-300);
-    font-size: 16px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    font-size: 13.5px;
     font-weight: 800;
     color: var(--navy);
 }
 
 .payout-row.highlight .amount {
-    color: #059669;
+    color: #10B981;
 }
 
-/* Support Page Layout */
+/* ==========================================================================
+   SUPPORT PAGE LAYOUT
+   ========================================================================== */
 .support-category-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -706,28 +2100,29 @@
 
 .category-card {
     background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-card);
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .category-card:hover {
     border-color: var(--solar-orange);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: none; /* strictly static hover */
 }
 
 .category-icon {
     width: 36px;
     height: 36px;
     border-radius: var(--radius-sm);
-    background: rgba(255, 138, 0, 0.1);
+    background: #FFF8EB;
+    border: 1px solid #FFE8CC;
     color: var(--solar-orange);
     display: flex;
     align-items: center;
@@ -741,15 +2136,15 @@
 }
 
 .category-title {
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 700;
     color: var(--navy);
     line-height: 1.3;
 }
 
 .category-desc {
-    font-size: 11.5px;
-    color: var(--gray-400);
+    font-size: 12px;
+    color: var(--gray-500);
     margin-top: 2px;
 }
 
@@ -783,14 +2178,14 @@
 .support-field textarea {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid var(--gray-300);
-    border-radius: var(--radius-xs);
-    font-size: 13.5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
     font-family: inherit;
     background: var(--white);
     color: var(--navy);
     outline: none;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     box-sizing: border-box;
 }
 
@@ -803,7 +2198,7 @@
 .support-field select:focus,
 .support-field textarea:focus {
     border-color: var(--solar-orange);
-    box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.12);
+    box-shadow: 0 0 0 3px rgba(255, 132, 0, 0.15);
 }
 
 .support-actions {
@@ -822,15 +2217,15 @@
 }
 
 .faq-item {
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     overflow: hidden;
     background: var(--white);
     transition: border-color var(--transition-fast);
 }
 
 .faq-item[open] {
-    border-color: var(--gray-300);
+    border-color: var(--solar-orange);
 }
 
 .faq-item summary {
@@ -851,7 +2246,7 @@
 }
 
 .faq-item summary:hover {
-    background: #fffdfa;
+    background: #FFFCF8;
 }
 
 .faq-answer {
@@ -859,7 +2254,7 @@
     font-size: 13px;
     color: var(--gray-600);
     line-height: 1.55;
-    border-top: 1px solid var(--gray-100);
+    border-top: 1px solid var(--border);
     padding-top: 12px;
 }
 
@@ -877,10 +2272,56 @@
     margin-bottom: 4px;
 }
 
-/* Responsive Breakpoints */
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS & MOBILE ADAPTATIONS
+   Tested on: 320px, 375px, 390px, 414px, 480px, 768px, 820px, 1024px, 1280px, 1440px, 1920px
+   ========================================================================== */
+
+/* 1. TABLET BREAKPOINT (769px to 1024px, e.g. 820px iPad Air, 1024px iPad Pro) */
 @media (max-width: 1024px) {
-    .installer-stats-grid {
+    .installer-stats-grid,
+    .installer-stats-grid.cols-3,
+    .installer-stats-grid.cols-4,
+    #jobsStatsGrid,
+    #payoutStatsGrid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    /* 2 + 1 summary card layout on tablet */
+    .installer-stats-grid > .stat-card:nth-child(3),
+    .installer-stats-grid.cols-3 > .stat-card:nth-child(3),
+    #jobsStatsGrid > .stat-card:nth-child(3),
+    #payoutStatsGrid > .stat-card:nth-child(3) {
+        grid-column: span 2;
+    }
+
+    .data-table th {
+        padding: 12px 14px;
+        font-size: 11px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .data-table td {
+        padding: 14px 14px;
+        font-size: 13px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .data-table th:first-child,
+    .data-table td:first-child,
+    .data-table th:last-child,
+    .data-table td:last-child {
+        padding-left: 14px;
+        padding-right: 14px;
+        text-align: center;
+    }
+
+    .btn-action {
+        padding: 7px 15px;
+        font-size: 12.5px;
     }
 
     .support-category-grid {
@@ -892,303 +2333,1024 @@
     }
 }
 
-@media (max-width: 640px) {
-    .installer-stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .support-category-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .table-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .toolbar-filters {
+/* 2. MOBILE BREAKPOINT (<= 768px: 768px, 480px, 414px, 390px, 375px) */
+@media (max-width: 768px) {
+    .installer-workspace {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
         width: 100%;
-        justify-content: space-between;
-    }
-
-    .specs-grid {
-        grid-template-columns: 1fr;
+        max-width: 100%;
+        min-width: 0;
+        gap: 16px;
     }
 
     .workspace-head {
+        padding-bottom: 0;
+    }
+
+    .workspace-title {
+        font-size: 18px !important;
+        line-height: 1.25;
+    }
+
+    .workspace-subtitle {
+        font-size: 12px !important;
+    }
+
+    /* Summary cards: 3 cards side by side in a compact, balanced row */
+    .installer-stats-grid,
+    .installer-stats-grid.cols-3,
+    .installer-stats-grid.cols-4,
+    #jobsStatsGrid,
+    #payoutStatsGrid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .installer-stats-grid > .stat-card:nth-child(3),
+    .installer-stats-grid.cols-3 > .stat-card:nth-child(3),
+    #jobsStatsGrid > .stat-card:nth-child(3),
+    #payoutStatsGrid > .stat-card:nth-child(3) {
+        grid-column: auto !important;
+    }
+
+    .stat-card {
+        padding: 11px 9px !important;
+        min-height: 74px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        gap: 4px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    button.stat-card.stat-card-interactive:active {
+        transform: scale(0.97) !important;
+        border-color: #ff8400 !important;
+    }
+
+    .stat-card-header {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 2px !important;
+    }
+
+    .stat-card-arrow {
+        width: 14px !important;
+        height: 14px !important;
+        flex-shrink: 0 !important;
+        margin-top: 1px !important;
+        color: #94a3b8 !important;
+    }
+
+    .stat-card-arrow svg {
+        width: 11px !important;
+        height: 11px !important;
+        stroke-width: 2.2 !important;
+    }
+
+    .stat-label {
+        font-size: 9.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.03em !important;
+        line-height: 1.25 !important;
+        color: var(--gray-500, #64748b) !important;
+        text-transform: uppercase !important;
+        margin-bottom: 0 !important;
+        word-break: break-word !important;
+        display: block !important;
+    }
+
+    .stat-value {
+        font-size: 20px !important;
+        font-weight: 800 !important;
+        line-height: 1.1 !important;
+        color: var(--navy, #101a2e) !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    /* Payouts specific metric card sizing */
+    #payoutStatsGrid .stat-value {
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    #payoutStatsGrid #statNextRelease {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    #payoutStatsGrid > .stat-card:nth-child(2) {
+        border-left: 3.5px solid #ff8400 !important;
+    }
+
+    /* Main panel & Header */
+    .panel-card {
+        border-radius: var(--radius-md);
+    }
+
+    .jobs-panel-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px 14px 10px 14px;
     }
-}
 
-/* ==========================================================================
-   NEXT ASSIGNMENT HERO SECTION
-   Answers: "What is my next assignment, and what do I need to do?"
-   ========================================================================== */
-.next-assignment-card {
-    background: linear-gradient(135deg, #ffffff 0%, #fffbf2 100%);
-    border: 1.5px solid rgba(255, 138, 0, 0.35);
-    border-radius: var(--radius-lg);
-    padding: 22px 26px;
-    box-shadow: 0 4px 20px rgba(255, 138, 0, 0.07);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    position: relative;
-    overflow: hidden;
-}
-
-.next-assignment-card::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 6px;
-    background: var(--solar-gradient);
-}
-
-.next-assignment-content {
-    flex: 1;
-    min-width: 280px;
-}
-
-.next-assignment-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(255, 138, 0, 0.12);
-    color: var(--solar-orange-dark);
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 8px;
-}
-
-.next-assignment-badge .pulse-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--solar-orange);
-    box-shadow: 0 0 0 2px rgba(255, 138, 0, 0.3);
-}
-
-.next-assignment-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--navy);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.next-assignment-title .job-id-chip {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--gray-500);
-    font-family: monospace;
-    background: var(--gray-100);
-    padding: 2px 8px;
-    border-radius: var(--radius-xs);
-}
-
-.next-assignment-meta {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    font-size: 13px;
-    color: var(--gray-600);
-    margin-bottom: 12px;
-}
-
-.next-assignment-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.next-assignment-meta-item svg {
-    color: var(--solar-orange);
-    flex-shrink: 0;
-}
-
-.next-assignment-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--navy);
-    background: rgba(16, 26, 46, 0.04);
-    padding: 8px 14px;
-    border-radius: var(--radius-xs);
-    border-left: 3px solid var(--navy);
-}
-
-.next-assignment-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-}
-
-/* 3-Column Stats Grid */
-.installer-stats-grid.cols-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-@media (max-width: 900px) {
-    .installer-stats-grid.cols-3 {
-        grid-template-columns: repeat(3, 1fr);
+    .jobs-panel-header .panel-title {
+        font-size: 15px !important;
     }
-}
 
-@media (max-width: 640px) {
-    .installer-stats-grid.cols-3 {
-        grid-template-columns: 1fr;
+    .jobs-panel-header .panel-subtitle {
+        font-size: 11.5px !important;
+        color: var(--gray-500);
+        margin-top: 2px;
     }
-}
 
-/* ==========================================================================
-   RESPONSIVE DATA TABLE TO CARDS (Screens <= 768px)
-   Prevents horizontal scroll blowout & ensures readable layout
-   ========================================================================== */
-@media (max-width: 768px) {
+    .jobs-panel-header .table-toolbar,
+    .jobs-panel-header .toolbar-filters,
+    .jobs-panel-header .jobs-filter-wrap {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .jobs-panel-header .jobs-filter-wrap .filter-label {
+        font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif) !important;
+        font-size: 12px !important;
+        font-weight: 600;
+        white-space: nowrap;
+        color: var(--text-muted);
+    }
+
+    .jobs-panel-header .toolbar-select,
+    .jobs-panel-header .filter-select,
+    .jobs-panel-header .jobs-filter-wrap .filter-select {
+        flex: 1;
+        width: 100%;
+        min-height: 38px;
+        height: 38px;
+        font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif) !important;
+        font-size: 13px !important;
+        font-weight: 600;
+        border-radius: var(--radius-xs);
+    }
+
+    /* Table converts into clean stacked cards */
     .table-responsive {
         overflow: visible;
+        padding: 0;
     }
 
-    .data-table thead {
+    #jobsTable,
+    #payoutsTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        table-layout: auto !important;
+    }
+
+    #jobsTable thead,
+    #payoutsTable thead {
+        display: none !important;
+    }
+
+    #jobsTable tbody,
+    #payoutsTable tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* --------------------------------------------------------------------------
+       MY JOBS MOBILE CARD: High-Precision 2-Row Architecture
+       Row 1: Applicant ID & Site (Left) + Status Badge (Right)
+       Row 2: Action Buttons (Full width with 42-44px touch targets)
+       -------------------------------------------------------------------------- */
+    #jobsTable tr {
+        background: #FFFFFF;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        margin: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "applicant status"
+            "action action";
+        align-items: start;
+        gap: 12px 10px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    #jobsTable tr:hover {
+        background: #FFFFFF !important;
+        border-color: #FF8400;
+        box-shadow: 0 2px 8px rgba(255, 132, 0, 0.08);
+    }
+
+    /* Reset all desktop column widths, paddings, and centering on mobile */
+    #jobsTable td,
+    #jobsTable th,
+    #jobsTable td:first-child,
+    #jobsTable td:nth-child(2),
+    #jobsTable td:nth-child(3) {
+        width: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Top Left: Applicant ID & Location */
+    #jobsTable td[data-label="Applicant ID"] {
+        grid-area: applicant;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        min-width: 0;
+    }
+
+    #jobsTable td[data-label="Applicant ID"]::before {
+        display: none !important;
+    }
+
+    #jobsTable .cell-applicant-link {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding: 0 !important;
+        margin: 0;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        cursor: pointer;
+    }
+
+    #jobsTable .applicant-id-text {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.25;
+        text-align: left;
+    }
+
+    #jobsTable .applicant-location-sub {
+        font-size: 12.5px;
+        color: var(--gray-500);
+        margin-top: 3px;
+        line-height: 1.3;
+        text-align: left;
+    }
+
+    /* Top Right: Status Badge */
+    #jobsTable td[data-label="Status"] {
+        grid-area: status;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    #jobsTable td[data-label="Status"]::before {
+        display: none !important;
+    }
+
+    #jobsTable td[data-label="Status"] .status-badge {
+        font-size: 12px;
+        padding: 4px 10px;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    /* Bottom: Full-Width Action Buttons */
+    #jobsTable td[data-label="Action"] {
+        grid-area: action;
+        grid-column: 1 / -1;
+        width: 100% !important;
+        padding-top: 12px !important;
+        margin-top: 2px !important;
+        border-top: 1px solid var(--border-subtle) !important;
+        display: block;
+    }
+
+    #jobsTable td[data-label="Action"]::before {
+        display: none !important;
+    }
+
+    #jobsTable td[data-label="Action"] .job-action-buttons {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+        margin: 0;
+    }
+
+    #jobsTable td[data-label="Action"] .btn-job-action {
+        flex: 1;
+        min-height: 42px;
+        font-size: 13.5px;
+        font-weight: 700;
+        border-radius: var(--radius-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #jobsTable td[data-label="Action"] .btn-action,
+    #jobsTable td[data-label="Action"] .btn-view-job-details {
+        width: 100%;
+        min-height: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: var(--radius-xs);
+        box-sizing: border-box;
+    }
+
+    /* --------------------------------------------------------------------------
+       PAYOUTS MOBILE CARD: High-Precision 3-Row Architecture
+       Row 1: Customer Name & Job ID (Left) + Status Badge (Right)
+       Row 2: Net Amount (Left) + Date (Right) with subtle dashed divider
+       Row 3: View Details Button (Full width)
+       -------------------------------------------------------------------------- */
+    #payoutsTable tr {
+        background: #FFFFFF;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        margin: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "job status"
+            "amount date"
+            "action action";
+        align-items: start;
+        gap: 10px 12px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    #payoutsTable tr:hover {
+        background: #FFFFFF !important;
+        border-color: #FF8400;
+        box-shadow: 0 2px 8px rgba(255, 132, 0, 0.08);
+    }
+
+    /* Reset all desktop column widths, paddings, and centering on mobile */
+    #payoutsTable td,
+    #payoutsTable th,
+    #payoutsTable td:first-child,
+    #payoutsTable td:not(:first-child) {
+        width: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Top Left: Customer Name & Job ID */
+    #payoutsTable td[data-label="Job"] {
+        grid-area: job;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        min-width: 0;
+    }
+
+    #payoutsTable td[data-label="Job"]::before {
+        display: none !important;
+    }
+
+    #payoutsTable .cell-primary {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        margin: 0;
+    }
+
+    #payoutsTable .payout-customer-name {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.25;
+        text-align: left;
+        word-break: break-word;
+    }
+
+    #payoutsTable .payout-job-id {
+        font-size: 12px;
+        color: var(--gray-500);
+        margin-top: 3px;
+        line-height: 1.3;
+        text-align: left;
+    }
+
+    /* Top Right: Status Badge */
+    #payoutsTable td[data-label="Status"] {
+        grid-area: status;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    #payoutsTable td[data-label="Status"]::before {
+        display: none !important;
+    }
+
+    #payoutsTable td[data-label="Status"] .status-badge {
+        font-size: 12px;
+        padding: 4px 10px;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    /* Middle Left: Net Amount with Micro-Label */
+    #payoutsTable td[data-label="Net Amount"] {
+        grid-area: amount;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding-top: 8px !important;
+        margin-top: 2px !important;
+        border-top: 1px dashed #E5E0D8 !important;
+    }
+
+    #payoutsTable td[data-label="Net Amount"]::before {
+        content: "Net Amount";
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #78716C;
+        margin-bottom: 2px;
+        display: block;
+    }
+
+    #payoutsTable .payout-table-amount {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.2;
+    }
+
+    /* Middle Right: Date with Micro-Label */
+    #payoutsTable td[data-label="Date"] {
+        grid-area: date;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+        justify-self: end;
+        padding-top: 8px !important;
+        margin-top: 2px !important;
+        border-top: 1px dashed #E5E0D8 !important;
+    }
+
+    #payoutsTable td[data-label="Date"]::before {
+        content: "Date";
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #78716C;
+        margin-bottom: 2px;
+        display: block;
+    }
+
+    #payoutsTable .payout-table-date {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--navy);
+        line-height: 1.2;
+    }
+
+    /* Bottom: Action View Button */
+    #payoutsTable td[data-label="Action"] {
+        grid-area: action;
+        grid-column: 1 / -1;
+        width: 100% !important;
+        padding-top: 10px !important;
+        margin-top: 2px !important;
+        border-top: 1px solid var(--border-subtle) !important;
+        display: block;
+    }
+
+    #payoutsTable td[data-label="Action"]::before {
+        display: none !important;
+    }
+
+    #payoutsTable td[data-label="Action"] .btn-action,
+    #payoutsTable td[data-label="Action"] .btn-view-payout-breakdown {
+        width: 100%;
+        min-height: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: var(--radius-xs);
+        box-sizing: border-box;
+        margin: 0;
+    }
+
+    /* Empty state full-width fallback */
+    #jobsTable tr:has(td[colspan]),
+    #payoutsTable tr:has(td[colspan]),
+    #jobsTable td[colspan],
+    #payoutsTable td[colspan] {
+        display: block !important;
+        grid-column: 1 / -1 !important;
+        grid-row: 1 / -1 !important;
+        width: 100% !important;
+        padding: 24px 16px !important;
+        text-align: center !important;
+    }
+
+    /* Generic data-table fallback for other pages */
+    .data-table:not(#jobsTable):not(#payoutsTable) thead {
         display: none;
     }
 
-    .data-table,
-    .data-table tbody,
-    .data-table tr,
-    .data-table td {
+    .data-table:not(#jobsTable):not(#payoutsTable),
+    .data-table:not(#jobsTable):not(#payoutsTable) tbody,
+    .data-table:not(#jobsTable):not(#payoutsTable) tr,
+    .data-table:not(#jobsTable):not(#payoutsTable) td {
         display: block;
         width: 100%;
     }
 
-    .data-table tr {
-        margin-bottom: 14px;
+    .data-table:not(#jobsTable):not(#payoutsTable) tr {
+        margin-bottom: 12px;
         background: var(--white);
-        border: 1px solid var(--gray-200);
+        border: 1px solid var(--border);
         border-radius: var(--radius-md);
-        padding: 16px;
-        box-shadow: var(--shadow-xs);
+        padding: 14px 16px;
+        box-shadow: var(--shadow-card);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
-    .data-table td {
-        padding: 8px 0;
+    .data-table:not(#jobsTable) tr:hover {
+        border-color: var(--solar-orange);
+    }
+
+    .data-table:not(#jobsTable) td {
+        padding: 0;
         border: none;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
         font-size: 13px;
+        box-shadow: none !important;
     }
 
-    .data-table td::before {
-        content: attr(data-label);
+    .data-table:not(#jobsTable) td[data-label="Job"] {
+        display: block;
+    }
+
+    .data-table:not(#jobsTable) td[data-label="Net Amount"]::before {
+        content: "Net Amount:";
         font-size: 11px;
         font-weight: 700;
         color: var(--gray-500);
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        margin-right: 12px;
-        flex-shrink: 0;
     }
 
-    .data-table td:last-child {
-        padding-top: 12px;
-        margin-top: 8px;
-        border-top: 1px solid var(--gray-100);
-        justify-content: flex-end;
+    .data-table:not(#jobsTable) td[data-label="Paid / Expected Date"]::before {
+        content: "Paid / Expected:";
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
-    .data-table td:last-child::before {
+    .data-table:not(#jobsTable) td[data-label="Action"] {
+        padding-top: 10px;
+        margin-top: 4px;
+        border-top: 1px solid var(--border);
+        display: block;
+    }
+
+    .data-table:not(#jobsTable) td[data-label="Action"]::before {
         display: none;
     }
 
-    .data-table td:last-child .btn-action {
+    .data-table:not(#jobsTable) td[data-label="Action"] .btn-action {
         width: 100%;
         justify-content: center;
         min-height: 44px;
         font-size: 13.5px;
+        font-weight: 700;
+    }
+
+    /* Modal Mobile Adaptations */
+    .installer-modal-backdrop {
+        padding: 12px;
+        align-items: center;
+    }
+
+    .installer-modal-card {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: var(--radius-md);
+        margin: 0;
+    }
+
+    /* KPI Modal Mobile Optimization */
+    .kpi-modal-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 90vh !important;
+        border-radius: 16px !important;
+        margin: 0 !important;
+    }
+
+    .kpi-modal-header {
+        padding: 12px 14px !important;
+        gap: 8px !important;
+    }
+
+    .kpi-modal-header-info {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2px !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+    }
+
+    .kpi-modal-title-wrap {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: nowrap !important;
+        min-width: 0 !important;
+    }
+
+    .kpi-modal-title {
+        font-size: 15px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        line-height: 1.25 !important;
+    }
+
+    .kpi-modal-count-badge {
+        font-size: 10.5px !important;
+        padding: 2px 7px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        line-height: 1.2 !important;
+    }
+
+    .kpi-modal-sub {
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .kpi-modal-body {
+        padding: 11px 12px 14px !important;
+        gap: 9px !important;
+    }
+
+    .kpi-job-item {
+        padding: 11px 12px !important;
+        gap: 8px !important;
+        border-radius: 10px !important;
+    }
+
+    .kpi-job-id-btn {
+        font-size: 13.5px !important;
+    }
+
+    .kpi-job-customer {
+        font-size: 11.5px !important;
+    }
+
+    .kpi-job-meta-grid {
+        gap: 5px !important;
+    }
+
+    .kpi-meta-item {
+        padding: 3px 6px !important;
+        font-size: 10.5px !important;
+        gap: 4px !important;
+        border-radius: 5px !important;
+    }
+
+    .kpi-meta-icon {
+        width: 11px !important;
+        height: 11px !important;
+    }
+
+    .kpi-job-actions:has(.btn-job-accept) {
+        gap: 6px !important;
+    }
+
+    .kpi-job-actions .btn-job-action {
+        min-height: 38px !important;
+        height: 38px !important;
+        font-size: 12px !important;
+        border-radius: 7px !important;
+        gap: 5px !important;
+    }
+
+    .kpi-job-actions .btn-job-action svg {
+        width: 13.5px !important;
+        height: 13.5px !important;
+    }
+
+    .kpi-job-actions .btn-action,
+    .kpi-job-actions .btn-view-job-details {
+        min-height: 38px !important;
+        height: 38px !important;
+        font-size: 12px !important;
+        border-radius: 7px !important;
+        gap: 5px !important;
+    }
+
+    .installer-modal-header {
+        padding: 12px 14px;
+    }
+
+    .installer-modal-title {
+        font-size: 15px;
+    }
+
+    .installer-modal-close {
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+        min-height: 30px !important;
+        border-radius: 7px !important;
+        padding: 0 !important;
+    }
+
+    .installer-modal-close svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .installer-modal-body {
+        padding: 14px 16px;
+        gap: 14px;
+    }
+
+    .modal-status-strip {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .modal-snapshot-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .modal-snapshot-grid .snapshot-card.full {
+        grid-column: 1;
+    }
+
+    .specs-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .installer-modal-footer {
+        padding: 12px 16px;
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+
+    .installer-modal-footer .btn {
+        width: 100%;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
-/* ==========================================================================
-   COMPACT PREVIEW DATA LOADER ACCORDION (Footer tool)
-   ========================================================================== */
-.json-preview-accordion {
-    margin-top: 32px;
-    background: var(--white);
-    border: 1px dashed var(--gray-300);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    font-size: 12.5px;
-}
+/* 3. VERY SMALL SCREENS (<= 360px: e.g. 320px iPhone SE) */
+@media (max-width: 360px) {
+    .content {
+        padding: 12px 10px !important;
+    }
 
-.json-preview-accordion summary {
-    padding: 12px 18px;
-    font-weight: 700;
-    color: var(--gray-600);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    user-select: none;
-    background: var(--gray-50);
-}
+    .workspace-head {
+        gap: 6px;
+    }
 
-.json-preview-accordion summary:hover {
-    color: var(--navy);
-    background: #f1f5f9;
-}
+    .workspace-title {
+        font-size: 19px !important;
+    }
 
-.json-preview-body {
-    padding: 18px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-top: 1px solid var(--gray-200);
-    background: var(--white);
-}
+    .workspace-subtitle {
+        font-size: 12px !important;
+    }
 
-.json-preview-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+    .panel-card {
+        border-radius: var(--radius-sm) !important;
+    }
 
-.json-status-alert {
-    padding: 8px 12px;
-    border-radius: var(--radius-xs);
-    font-size: 12px;
-    font-weight: 600;
-    display: none;
-}
+    .jobs-panel-header {
+        padding: 12px !important;
+    }
 
-.json-status-alert.error {
-    display: block;
-    background: #fef2f2;
-    color: var(--red);
-    border: 1px solid #fecaca;
-}
+    .jobs-panel-header .panel-title {
+        font-size: 16px !important;
+    }
 
-.json-status-alert.success {
-    display: block;
-    background: #ecfdf5;
-    color: #059669;
-    border: 1px solid #a7f3d0;
+    .installer-stats-grid,
+    .installer-stats-grid.cols-3,
+    .installer-stats-grid.cols-4,
+    #jobsStatsGrid,
+    #payoutStatsGrid {
+        gap: 6px !important;
+    }
+
+    .stat-card {
+        padding: 9px 6px !important;
+        min-height: 70px !important;
+        border-radius: 9px !important;
+    }
+
+    .stat-label {
+        font-size: 8.5px !important;
+        letter-spacing: 0.01em !important;
+    }
+
+    .stat-value {
+        font-size: 18px !important;
+    }
+
+    #payoutStatsGrid .stat-value {
+        font-size: 13.5px !important;
+    }
+
+    #payoutStatsGrid #statNextRelease {
+        font-size: 10.5px !important;
+    }
+
+    #jobsTable tbody,
+    #payoutsTable tbody {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    #jobsTable tr,
+    #payoutsTable tr {
+        padding: 12px !important;
+        border-radius: var(--radius-xs) !important;
+    }
+
+    #jobsTable td[data-label="Customer"] .job-customer-name,
+    #payoutsTable td[data-label="Job"] .payout-customer-name {
+        font-size: 14px !important;
+    }
+
+    #jobsTable td[data-label="Customer"] .cell-sub,
+    #payoutsTable td[data-label="Job"] .cell-sub {
+        font-size: 11.5px !important;
+    }
+
+    #jobsTable td[data-label="Action"] .btn-action,
+    #jobsTable td[data-label="Action"] .btn-view-job-details,
+    #payoutsTable td[data-label="Action"] .btn-action,
+    #payoutsTable td[data-label="Action"] .btn-view-payout-breakdown {
+        font-size: 13px !important;
+    }
+
+    /* KPI Modal Very Small Screens */
+    .kpi-modal-header {
+        padding: 10px 11px !important;
+        gap: 6px !important;
+    }
+
+    .kpi-modal-title {
+        font-size: 14px !important;
+        white-space: nowrap !important;
+    }
+
+    .kpi-modal-count-badge {
+        font-size: 10px !important;
+        padding: 1.5px 6px !important;
+        white-space: nowrap !important;
+    }
+
+    .kpi-modal-sub {
+        font-size: 10.5px !important;
+        white-space: nowrap !important;
+    }
+
+    .installer-modal-close {
+        width: 26px !important;
+        height: 26px !important;
+        min-width: 26px !important;
+        min-height: 26px !important;
+    }
+
+    .installer-modal-close svg {
+        width: 13px !important;
+        height: 13px !important;
+    }
+
+    .kpi-modal-body {
+        padding: 9px 10px 12px !important;
+        gap: 7px !important;
+    }
+
+    .kpi-job-item {
+        padding: 9px 10px !important;
+        gap: 7px !important;
+    }
+
+    .kpi-job-id-btn {
+        font-size: 13px !important;
+    }
+
+    .kpi-job-customer {
+        font-size: 11px !important;
+    }
+
+    .kpi-meta-item {
+        padding: 2.5px 5px !important;
+        font-size: 10px !important;
+        gap: 3.5px !important;
+    }
+
+    .kpi-meta-icon {
+        width: 10px !important;
+        height: 10px !important;
+    }
+
+    .kpi-job-actions:has(.btn-job-accept) {
+        gap: 5px !important;
+    }
+
+    .kpi-job-actions .btn-job-action {
+        min-height: 35px !important;
+        height: 35px !important;
+        font-size: 11.5px !important;
+        padding: 0 6px !important;
+        gap: 4px !important;
+    }
+
+    .kpi-job-actions .btn-job-action svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .kpi-job-actions .btn-action,
+    .kpi-job-actions .btn-view-job-details {
+        min-height: 35px !important;
+        height: 35px !important;
+        font-size: 11.5px !important;
+        padding: 0 6px !important;
+        gap: 4px !important;
+    }
 }
 
